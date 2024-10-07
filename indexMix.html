@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Celine</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+        input{
+            width: 250px;
+            height: 40px;
+            line-height: 40px;
+            position: absolute;
+            bottom: 35px;
+            left: calc(50% - 125px);
+            background: none;
+            color: white;
+            font-size: 30px;
+            text-align: center;
+            border: 1px solid white;
+            background: rgba(255,255,255,0.2);
+        }
+        p{
+            position: fixed;
+            left: 0;
+            bottom:5px;
+            color: #fff;
+            z-index:10;
+            font-size:16px;
+            font-family: Helvetica, Verdana, sans-serif;
+            opacity:0.5;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="particleCanvasMix"></canvas>
+<script src="script/scriptMix.js"></script>
+<label for="copy"></label>
+<input id="copy" type="text" value="Hello" />
+</body>
+</html>
