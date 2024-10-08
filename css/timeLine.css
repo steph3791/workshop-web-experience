@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     font-size: 0.8rem;
     font-family: "Source Sans Pro", sans-serif;
-    width: 100%;
+    /*width: 100%;*/
     margin: 0;
 }
 
@@ -12,7 +12,7 @@ a {
 }
 
 .horizontal-timeline {
-    width: 100%;
+    /*width: 100%;*/
     opacity: 100%;
     margin: 5em auto;
     display: flex;
@@ -39,7 +39,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    width: 100%;
+    width: 200px;
     padding: 0;
     margin: 0;
 }
@@ -82,17 +82,6 @@ a {
 .time ol li span {
     margin-top: 10px;
 }
-
-/*.filling-line {*/
-/*    position: absolute;*/
-/*    top: 50%;*/
-/*    left: 0;*/
-/*    height: 10px;*/
-/*    width: 100%;*/
-/*    background-color: #da773f;*/
-/*    !*z-index: -1;*!*/
-/*    !*transform: translateY(-50%);*!*/
-/*}*/
 
 .filling-line {
     position: absolute;

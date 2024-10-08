@@ -41,3 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+const resizeElement = document.querySelector('ol');
+
+
+document.addEventListener("wheel", function (event) {
+    console.log(event);
+    console.log(event.deltaX, event.deltaY)
+
+    resizeElement.style.width = 2000 + `px`;
+    console.log(parseInt(resizeElement.style.width), resizeElement.style.width);
+})
