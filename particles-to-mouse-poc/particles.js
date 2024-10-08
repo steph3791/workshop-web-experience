@@ -5,49 +5,55 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const particles = [];
-const particleCount = 500;
+const particleCount = 200;
 let mouse = { x: 0, y: 0, isDown: false };
 
 class Particle {
     constructor(x, y) {
+        this.createNew(x,y)
+    }
+
+    createNew(x,y) {
         this.x = x || Math.random() * canvas.width;
         this.y = y || Math.random() * canvas.height;
         this.size = Math.random() * 10 + 1;
         this.speedX = Math.random() * 3 - 1.5;
         this.speedY = Math.random() * 3 - 1.5;
-        this.gravity = 0.2;
+        this.pullForce = 1;
+        this.lifetime = Math.max(100, Math.random() * 400);
     }
 
     update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        if (this.lifetime > 0) {
+            this.x += this.speedX;
+            this.y += this.speedY;
 
-        if (mouse.isDown) {
-            this.speedX *= 0.95;
-            this.speedY *= 0.95;
+            if (mouse.isDown) {
+                this.speedX *= 0.95;
+                this.speedY *= 0.95;
 
-            const dx = mouse.x - this.x;
-            const dy = mouse.y - this.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
 
-            const directionX = dx / dist;
-            const directionY = dy / dist;
+                const directionX = dx / dist;
+                const directionY = dy / dist;
 
-            const maxDistance = 150; //Radius around cursor
-            const force = Math.min(dist / maxDistance, 1);
-            this.speedX += directionX * force * this.gravity;
-            this.speedY += directionY * force * this.gravity;
+                const maxDistance = 150; //Radius around cursor
+                const force = Math.min(dist / maxDistance, 1);
+                this.speedX += directionX * force * this.pullForce;
+                this.speedY += directionY * force * this.pullForce;
+            }
+
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+            this.lifetime--;
         } else {
-            this.speedX += Math.random() *2-1;
-            this.speedY += Math.random() *2-1;
-            this.speedX *= 0.95;
-            this.speedY *= 0.95;
+            this.createNew()
         }
 
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
     }
 
     // Draw particle
