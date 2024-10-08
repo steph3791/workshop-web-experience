@@ -12,6 +12,7 @@ a {
 }
 
 .horizontal-timeline {
+    width: 100%;
     opacity: 100%;
     margin: 5em auto;
     display: flex;
@@ -22,37 +23,50 @@ a {
 }
 
 .horizontal-timeline .time {
-    height: 2px;
-    margin: 0 auto;
-    background-color: #8ad5e7;
-    /*padding: 8px;*/
+    position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    height: 2px;
+    /*margin: 0 auto;*/
+    background-color: #8ad5e7;
+    width: 80%;
+    /*padding: 2px;*/
 }
 
 .time ol {
     list-style: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
     padding: 0;
     margin: 0;
 }
 
 .time ol li {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
 .time ol li a {
-    display: block;
-    padding: 10px;
-    /*background-color: #fff;*/
+    display: flex;
+    position: relative;
+    top: 11px;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*flex-direction: column;*/
+    /*padding: 10px;*/
+    background-color: #cb63e3;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 16px;
+    height: 16px;
     line-height: 30px;
-    text-align: center;
+    /*text-align: center;*/
     transition: background-color 0.3s ease;
 }
 
@@ -61,15 +75,32 @@ a {
     color: #fff;
 }
 
-.filling-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    height: 4px;
-    width: 100%;
-    background-color: #fff;
-    z-index: -1;
-    transform: translateY(-50%);
+.time ol li a.active {
+    background-color: #f39c12;
 }
 
+.time ol li span {
+    margin-top: 10px;
+}
 
+/*.filling-line {*/
+/*    position: absolute;*/
+/*    top: 50%;*/
+/*    left: 0;*/
+/*    height: 10px;*/
+/*    width: 100%;*/
+/*    background-color: #da773f;*/
+/*    !*z-index: -1;*!*/
+/*    !*transform: translateY(-50%);*!*/
+/*}*/
+
+.filling-line {
+    position: absolute;
+    /*top: 50%;*/
+    height: 8px;
+    background-color: #da773f;
+    z-index: 0;
+    /*transform: translateY(-50%);*/
+    /*transition: width 0.3s ease;*/
+    display: none;
+}

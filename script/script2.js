@@ -20,7 +20,7 @@ offCtx.fillStyle = 'white';
 offCtx.font = "150px Arial";
 offCtx.textAlign = "center";
 offCtx.textBaseline = "middle";
-offCtx.fillText("O", offCanvas.width / 2, offCanvas.height / 2);
+offCtx.fillText("07:00 - 12:00", offCanvas.width / 2, offCanvas.height / 2);
 
 // Extract image data to find white pixels
 const imageData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
