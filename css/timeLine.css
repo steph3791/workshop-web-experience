@@ -51,7 +51,7 @@ a {
 }
 
 .timeline ol li {
-    /*position: absolute;*/
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -60,6 +60,7 @@ a {
 }
 
 .timeline ol li a {
+    position: absolute;
     display: flex;
     background-color: #cb63e3;
     border-radius: 50%;
@@ -74,7 +75,7 @@ a {
 }
 
 .timeline ol li span {
-    margin-top: 12px;
+    margin-top: 32px;
 }
 
 .timeline ol li a.active {
