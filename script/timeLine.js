@@ -1,10 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const timePoints = document.querySelectorAll(".time ol li a");
+    const timePoints = document.querySelectorAll(".timeline ol li a");
     let startTime = null;
     let endTime = null;
 
     const fillingLine = document.querySelector('.filling-line');
-    const timelineContainer = document.querySelector('.time');
+    const timelineContainer = document.querySelector('.timeline');
+    const resizeElement = document.querySelector('.timeline ol');
+
+    let currentWidth = resizeElement.offsetWidth;  // Startbreite der Timeline
+    const viewportWidth = window.innerWidth * 0.80;
 
     function getOffsetRelativeToTimeline(element) {
         const elementRect = element.getBoundingClientRect();
@@ -40,15 +44,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    document.addEventListener("wheel", function (event) {
+        // event.preventDefault();
+
+        const zoomSpeed = 100;
+        const delta = event.deltaY < 0 ? zoomSpeed : -zoomSpeed;
+
+        currentWidth = Math.max(viewportWidth, currentWidth + delta);
+        resizeElement.style.width = `${currentWidth}px`;
+    });
 });
 
-const resizeElement = document.querySelector('ol');
-
-
-document.addEventListener("wheel", function (event) {
-    console.log(event);
-    console.log(event.deltaX, event.deltaY)
-
-    resizeElement.style.width = 2000 + `px`;
-    console.log(parseInt(resizeElement.style.width), resizeElement.style.width);
-})

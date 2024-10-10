@@ -1,9 +1,12 @@
 html, body {
     height: 100%;
+    width: 100%;
     font-size: 0.8rem;
     font-family: "Source Sans Pro", sans-serif;
-    /*width: 100%;*/
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 a {
@@ -11,41 +14,44 @@ a {
     text-decoration: none;
 }
 
-.horizontal-timeline {
-    /*width: 100%;*/
-    opacity: 100%;
+.horizontal-timeline-container {
+    /*width: 700px;*/
+    width: 80vw;
+    height: 500px;
+    overflow: hidden;
     margin: 5em auto;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
+    background-color: #ceedf4;
 }
 
-.horizontal-timeline .time {
+.timeline {
     position: relative;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    height: 2px;
+    height: 4px;
     /*margin: 0 auto;*/
     background-color: #8ad5e7;
-    width: 80%;
+    width: 80vw;
     /*padding: 2px;*/
 }
 
-.time ol {
+.timeline ol {
+    position: absolute;
     list-style: none;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    width: 200px;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
     padding: 0;
     margin: 0;
 }
 
-.time ol li {
-    position: relative;
+.timeline ol li {
+    /*position: absolute;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -53,34 +59,26 @@ a {
     text-align: center;
 }
 
-.time ol li a {
+.timeline ol li a {
     display: flex;
-    position: relative;
-    top: 11px;
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*flex-direction: column;*/
-    /*padding: 10px;*/
     background-color: #cb63e3;
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    line-height: 30px;
-    /*text-align: center;*/
+    width: 12px;
+    height: 12px;
     transition: background-color 0.3s ease;
 }
 
-.time ol li a:hover {
+.timeline ol li a:hover {
     background-color: #00a1c4;
     color: #fff;
 }
 
-.time ol li a.active {
-    background-color: #f39c12;
+.timeline ol li span {
+    margin-top: 12px;
 }
 
-.time ol li span {
-    margin-top: 10px;
+.timeline ol li a.active {
+    background-color: #f39c12;
 }
 
 .filling-line {
