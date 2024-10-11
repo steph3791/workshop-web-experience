@@ -24,6 +24,8 @@ a {
     justify-content: center;
     align-items: center;
     background-color: #ceedf4;
+    overflow-x: auto;
+    /*white-space: nowrap;*/
 }
 
 .timeline {

@@ -93,9 +93,31 @@ document.addEventListener("DOMContentLoaded", function () {
         const zoomSpeed = 100;
         const delta = event.deltaY < 0 ? zoomSpeed : -zoomSpeed;
 
-        currentWidth = Math.max(viewportWidth, currentWidth + delta);
-        resizeElement.style.width = `${currentWidth}px`;
+        // Berechne die Position der Maus relativ zur gesamten Timeline (inklusive Scroll-Offset)
+        const mousePositionX = event.clientX - timelineContainer.getBoundingClientRect().left;
+        const currentScrollLeft = timelineContainer.scrollLeft;
+        const mousePositionRelativeToTimeline = currentScrollLeft + mousePositionX;
+
+        // Verhältnis der Mausposition zur aktuellen Breite
+        const mouseRelativePosition = mousePositionRelativeToTimeline / currentWidth;
+
+        // Berechne die neue Breite der Timeline basierend auf dem Scrollen (Zoom)
+        const newWidth = Math.max(viewportWidth, currentWidth + delta);
+
+        // Berechne die neue Scrollposition, um die Mausposition im Fokus zu behalten
+        const newScrollLeft = (mouseRelativePosition * newWidth) - mousePositionX;
+
+        // Setze die neue Breite der Timeline
+        resizeElement.style.width = `${newWidth}px`;
+
+        // Setze die neue Scrollposition, um den Mausbereich im Fokus zu halten
+        timelineContainer.scrollLeft = newScrollLeft;
+
+        // Aktualisiere die Linie und die Punkte
         updateFillingLine();
+
+        // Aktualisiere die aktuelle Breite
+        currentWidth = newWidth;
     });
 });
 
