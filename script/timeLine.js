@@ -20,6 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         timelineList.appendChild(li);
     }
+
+    // Initialisiere die Breite von #timeline-times auf 100% der Container-Breite
+    const timelineContainer = document.querySelector('.horizontal-timeline-container');
+    const resizeElement = document.getElementById("timeline-times");
+    resizeElement.style.width = `${timelineContainer.clientWidth}px`;
+    // Setze currentWidth entsprechend
+    currentWidth = resizeElement.offsetWidth;
+
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -107,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Setze die neue Breite der Timeline
         resizeElement.style.width = `${newWidth}px`;
-        timelineWrapper.style.width = `${newWidth}px`;
+        //timelineWrapper.style.width = `${newWidth}px`;
 
         // Begrenze die Scrollposition auf den Bereich der Timeline
         const maxScrollLeft = timelineContainer.scrollWidth - timelineContainer.clientWidth;
