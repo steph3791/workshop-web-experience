@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const timelineList = document.getElementById("timeline-list");
-
+    const timelineList = document.getElementById("timeline-times");
     function formatTime(hour) {
         return hour < 10 ? '0' + hour + ':00' : hour + ':00';
     }
@@ -23,22 +22,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
-    const timePoints = document.querySelectorAll(".timeline ol li a");
+    const timePoints = document.querySelectorAll("#timeline-times li a");
     let startTime = null;
     let endTime = null;
 
     const fillingLine = document.querySelector('.filling-line');
-    const timelineContainer = document.querySelector('.timeline');
-    const resizeElement = document.querySelector('.timeline ol');
+    const timelineContainer = document.querySelector('.horizontal-timeline-container');
+    const timelineWrapper = document.querySelector('.timeline-wrapper');
+    const resizeElement = document.querySelector('#timeline-times');
 
     let currentWidth = resizeElement.offsetWidth;  // Startbreite der Timeline
     const viewportWidth = window.innerWidth * 0.80;
 
     function getOffsetRelativeToTimeline(element) {
         const elementRect = element.getBoundingClientRect();
-        const timelineRect = timelineContainer.getBoundingClientRect();
+        const timelineRect = timelineWrapper.getBoundingClientRect();
         return elementRect.left - timelineRect.left;
     }
 
@@ -83,13 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener("click", function (event) {
-        if (!timelineContainer.contains(event.target)) {
+        if (!timelineWrapper.contains(event.target)) {
             resetSelection();
         }
     });
 
     document.addEventListener("wheel", function (event) {
-        // event.preventDefault();
         const zoomSpeed = 100;
         const delta = event.deltaY < 0 ? zoomSpeed : -zoomSpeed;
 
@@ -109,9 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Setze die neue Breite der Timeline
         resizeElement.style.width = `${newWidth}px`;
+        timelineWrapper.style.width = `${newWidth}px`;
 
-        // Setze die neue Scrollposition, um den Mausbereich im Fokus zu halten
-        timelineContainer.scrollLeft = newScrollLeft;
+        // Begrenze die Scrollposition auf den Bereich der Timeline
+        const maxScrollLeft = timelineContainer.scrollWidth - timelineContainer.clientWidth;
+        timelineContainer.scrollLeft = Math.max(0, Math.min(maxScrollLeft, newScrollLeft));
 
         // Aktualisiere die Linie und die Punkte
         updateFillingLine();
@@ -120,4 +120,3 @@ document.addEventListener("DOMContentLoaded", function () {
         currentWidth = newWidth;
     });
 });
-
