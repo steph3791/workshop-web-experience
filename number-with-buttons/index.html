@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Scale App</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #number {
+            font-size: 48px;
+            margin: 20px;
+        }
+        .button {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            cursor: pointer;
+        }
+        .up {
+            border-bottom: 30px solid #000000; /* Blue triangle */
+        }
+        .down {
+            border-top: 30px solid #000000; /* Red triangle */
+        }
+    </style>
+</head>
+<body>
+
+<div class="button up" onclick="changeNumber(1)"></div>
+<div id="number">0</div>
+<div class="button down" onclick="changeNumber(-1)"></div>
+
+<script>
+    let currentNumber = 0;
+
+    function changeNumber(delta) {
+        currentNumber += delta;
+        if (currentNumber > 9) currentNumber = 9; // Max limit
+        if (currentNumber < 0) currentNumber = 0; // Min limit
+        document.getElementById('number').innerText = currentNumber;
+    }
+</script>
+
+</body>
+</html>
