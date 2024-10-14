@@ -116,10 +116,9 @@ canvas {
     pointer-events: auto;
 }
 
-/* Andere Stile für den Inhalt des Containers */
 .content {
     position: relative;
-    z-index: 1; /* Damit der Inhalt über dem Canvas bleibt */
+    z-index: 1;
     text-align: center;
     padding-top: 20px;
 }

@@ -16,7 +16,7 @@ class Particle {
     createNew(x,y) {
         this.x = x || Math.random() * canvas.width;
         this.y = y || Math.random() * canvas.height;
-        this.size = Math.random() * 10 + 1;
+        this.size = Math.random() * 3 + 1;
         this.speedX = Math.random() * 3 - 1.5;
         this.speedY = Math.random() * 3 - 1.5;
         this.pullForce = 1;
