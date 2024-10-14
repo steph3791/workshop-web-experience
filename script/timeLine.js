@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         anchor.href = "#";
         anchor.setAttribute("data-date", formatTime(hour));
         anchor.classList.add("timeline-point");
+        li.classList.add("particle-container");
         const timeLabel = document.createElement("span");
         timeLabel.textContent = formatTime(hour);
 
