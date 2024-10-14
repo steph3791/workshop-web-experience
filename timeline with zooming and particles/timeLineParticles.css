@@ -10,6 +10,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: #000000;
 }
 
 a {
@@ -24,10 +25,11 @@ a {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: #c1f1e8;
+    background-color: #000000;
     overflow-x: auto;
     /*white-space: nowrap;*/
     position: relative;
+    border: solid white 1px;
 }
 
 .timeline-wrapper {
@@ -90,16 +92,17 @@ a {
 
 .timeline-wrapper ol li span {
     margin-top: 32px;
+    color: white;
 }
 
 .timeline-wrapper ol li a.active {
-    background-color: #f39c12;
+    background-color: #fefefe;
 }
 
 .filling-line {
     position: absolute;
     height: 12px;
-    background-color: #da773f;
+    background-color: #ffffff;
     z-index: 0;
     display: none;
 }
@@ -107,8 +110,26 @@ a {
 canvas {
     position: absolute;
     border: solid 1px #5d5a5a;
-    z-index: 10;
+    z-index: 0;
     top: 0;
     left: 0;
-    pointer-events: none;
+    pointer-events: auto;
 }
+
+/* Andere Stile für den Inhalt des Containers */
+.content {
+    position: relative;
+    z-index: 1; /* Damit der Inhalt über dem Canvas bleibt */
+    text-align: center;
+    padding-top: 20px;
+}
+
+/*.particle-container {*/
+/*    width: 100px;*/
+/*    height: 100px;*/
+/*    background-color: rgba(255, 0, 0, 0.5);*/
+/*    display: inline-block;*/
+/*    margin: 10px;*/
+/*    cursor: pointer;*/
+/*    position: relative;*/
+/*}*/
