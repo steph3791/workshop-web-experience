@@ -1,12 +1,14 @@
 const svg = document.getElementById("particleSVG");
 const line = document.getElementById("line");
+const timeline = document.getElementById("timeline");
 
 svg.setAttribute("width", window.innerWidth);
 svg.setAttribute("height", window.innerHeight);
 
 const particles = [];
-const particleCount = 200;
-let mouse = { x: 0, y: 0, isDown: false };
+const placedParticles = [];
+const particleCount = 500;
+let mouse = {x: 0, y: 0, isDown: false};
 
 class Particle {
     constructor() {
@@ -58,7 +60,6 @@ class Particle {
                     const dy = mouse.y - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 5) {
-                        console.log("Freeze")
                         this.freeze()
                     }
 
@@ -88,7 +89,21 @@ class Particle {
 
     freeze() {
         this.isSimulated = false;
-        this.createNew(false)
+        placedParticles.push(this);
+        let index = particles.indexOf(this);
+        console.log(index);
+        particles.splice(index, 1);
+        svg.removeChild(this.element)
+        particles.push(new Particle())
+        // this.createNew(false)
+    }
+
+    getElement() {
+        return this.element;
+    }
+
+    setIsSimulated(isSimulated) {
+        this.isSimulated = isSimulated;
     }
 }
 
@@ -101,24 +116,31 @@ function initParticles() {
 function animateParticles() {
     particles.forEach(particle => {
         particle.update();
+        particle.setIsSimulated(true)
     });
+
+    placedParticles.forEach(p => {
+        if (svg.contains(p.getElement())) svg.removeChild(p.getElement());
+    })
+    placedParticles.splice(0, placedParticles.length - 1);
+
+
+
+    console.log("PlacedParticles: " + placedParticles.length + " Particles: " + particles.length + " Children: " + svg.children.length)
 
     requestAnimationFrame(animateParticles);
 }
 
-// Event listeners for mouse interaction
-// svg.addEventListener("mousedown", (event) => {
-//     mouse.x = event.clientX;
-//     mouse.y = event.clientY;
-//     mouse.isDown = true;
-// });
-//
 svg.addEventListener("mouseup", () => {
     mouse.isDown = false;
+
 });
 
 svg.addEventListener("mousemove", (event) => {
     mouse.x = event.clientX;
+    if (mouse.isDown) {
+        drawTimerange()
+    }
 });
 
 line.addEventListener("mousedown", (event) => {
@@ -126,16 +148,23 @@ line.addEventListener("mousedown", (event) => {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
     mouse.isDown = true;
+    initializeTimerangeDraw()
 })
 
-// line.addEventListener("mouseup", () => {
-//     mouse.isDown = false;
-// });
-//
-// line.addEventListener("mousemove", (event) => {
-//     mouse.x = event.clientX;
-//     mouse.y = event.clientY;
-// });
+function initializeTimerangeDraw() {
+    timeline.setAttribute('stroke-width', 20);
+    timeline.setAttribute('stroke', 'white')
+    timeline.setAttribute('x1', mouse.x)
+    timeline.setAttribute('x2', mouse.x *0.95)
+}
+
+function drawTimerange() {
+    timeline.setAttribute('x2', mouse.x)
+}
+
+function clearTimeRange() {
+    timeline.setAttribute('stroke-width', 0);
+}
 
 window.addEventListener("resize", () => {
     svg.setAttribute("width", window.innerWidth);
