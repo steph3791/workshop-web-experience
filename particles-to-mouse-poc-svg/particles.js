@@ -21,7 +21,7 @@ class Particle {
         this.size = Math.random() * 10 + 1;
         this.speedX = this.initSpeed();
         this.speedY = this.initSpeed();
-        this.pullForce = 0.5;
+        this.pullForce = 1;
         this.lifetime = Math.max(100, Math.random() * 400);
         this.isSimulated = true;
 
@@ -59,6 +59,10 @@ class Particle {
                     const dx = mouse.x - this.x;
                     const dy = mouse.y - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 10) {
+                        this.size = Math.min(15, this.size + 1);
+                        this.element.setAttribute("r", this.size / 2);
+                    }
                     if (dist < 5) {
                         this.freeze()
                     }
