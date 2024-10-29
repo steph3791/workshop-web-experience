@@ -1,0 +1,78 @@
+/**, *::before, *::after {*/
+/*    box-sizing: border-box;*/
+/*    margin:  0;*/
+/*    padding: 0;*/
+/*}*/
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: "Source Sans Pro", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+svg {
+    width: 80%;
+    /*margin: 0 auto;*/
+    filter: drop-shadow(0px 0px 1em cyan);
+    display: block;
+    stroke-linecap: round;
+}
+
+svg:active {
+    cursor: grabbing;
+}
+
+#timeline {
+    stroke: black;
+}
+
+.timeline-horizontal-line {
+    stroke-width: 5px;
+    stroke: cyan;
+}
+
+.timeline-vertical-line-hour {
+    stroke-width: 1px;
+    stroke-opacity: 1;
+    stroke: purple;
+}
+
+.timeline-vertical-line-halfHour {
+    stroke-width: 1px;
+    stroke-opacity: 1;
+    stroke: blue;
+}
+
+.timeline-vertical-line-quarterHour {
+    stroke-width: 1px;
+    stroke-opacity: 1;
+    stroke: orange;
+}
+
+.timeline-vertical-line-fiveMinutes {
+    stroke-width:   1px;
+    stroke-opacity: 1;
+    stroke: red;
+}
+
+.timeline-vertical-line-oneMinute {
+    stroke-width:   0.5px;
+    stroke-opacity: 1;
+    stroke: grey;
+}
+
+.tick {
+    /* Gemeinsame Tick-Stile können hier definiert werden */
+    transition: opacity 0.3s ease; /* Sanfte Übergänge für Ticks */
+}
+
+.tick-label {
+    text-anchor: middle;
+    font-weight: lighter;
+    stroke: none;
+    fill: black;
+}
