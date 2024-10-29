@@ -8,7 +8,7 @@ const particleCount = 200;
 let mouse = { x: 0, y: 0, isDown: false };
 
 class Particle {
-    constructor( isRespawn) {
+    constructor() {
         this.createNew(false);
     }
 
@@ -20,6 +20,7 @@ class Particle {
         this.speedY = Math.random() * 3 - 1.5;
         this.pullForce = 1;
         this.lifetime = Math.max(100, Math.random() * 400);
+        this.isSimulated = true;
 
         // Create SVG circle element for each particle
         if (!isRespawn) {
@@ -40,38 +41,50 @@ class Particle {
     }
 
     update() {
-        if (this.lifetime > 0) {
-            this.x += this.speedX;
-            this.y += this.speedY;
+        if (this.isSimulated) {
+            if (this.lifetime > 0) {
+                this.x += this.speedX;
+                this.y += this.speedY;
 
-            if (mouse.isDown) {
-                this.speedX *= 0.95;
-                this.speedY *= 0.95;
+                if (mouse.isDown) {
+                    this.speedX *= 0.95;
+                    this.speedY *= 0.95;
 
-                const dx = mouse.x - this.x;
-                const dy = mouse.y - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 5) {
+                        console.log("Freeze")
+                        this.freeze()
+                    }
 
-                const directionX = dx / dist;
-                const directionY = dy / dist;
+                    const directionX = dx / dist;
+                    const directionY = dy / dist;
 
-                const maxDistance = 150; // Radius around cursor
-                const force = Math.min(dist / maxDistance, 1);
-                this.speedX += directionX * force * this.pullForce;
-                this.speedY += directionY * force * this.pullForce;
+                    const maxDistance = 150; // Radius around cursor
+                    const force = Math.min(dist / maxDistance, 1);
+                    this.speedX += directionX * force * this.pullForce;
+                    this.speedY += directionY * force * this.pullForce;
+                }
+
+                // Screen wrapping for particles
+                if (this.x > window.innerWidth) this.x = 0;
+                if (this.x < 0) this.x = window.innerWidth;
+                if (this.y > window.innerHeight) this.y = 0;
+                if (this.y < 0) this.y = window.innerHeight;
+
+                this.lifetime--;
+                this.updatePosition();
+            } else {
+                this.createNew(true);
             }
-
-            // Screen wrapping for particles
-            if (this.x > window.innerWidth) this.x = 0;
-            if (this.x < 0) this.x = window.innerWidth;
-            if (this.y > window.innerHeight) this.y = 0;
-            if (this.y < 0) this.y = window.innerHeight;
-
-            this.lifetime--;
-            this.updatePosition();
-        } else {
-            this.createNew(true);
         }
+
+    }
+
+    freeze() {
+        this.isSimulated = false;
+        this.createNew(false)
     }
 }
 
