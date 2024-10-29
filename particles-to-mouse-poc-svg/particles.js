@@ -1,4 +1,5 @@
 const svg = document.getElementById("particleSVG");
+const line = document.getElementById("line");
 
 svg.setAttribute("width", window.innerWidth);
 svg.setAttribute("height", window.innerHeight);
@@ -16,13 +17,12 @@ class Particle {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight;
         this.size = Math.random() * 10 + 1;
-        this.speedX = Math.random() * 3 - 1.5;
-        this.speedY = Math.random() * 3 - 1.5;
-        this.pullForce = 1;
+        this.speedX = this.initSpeed();
+        this.speedY = this.initSpeed();
+        this.pullForce = 0.5;
         this.lifetime = Math.max(100, Math.random() * 400);
         this.isSimulated = true;
 
-        // Create SVG circle element for each particle
         if (!isRespawn) {
             this.element = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         }
@@ -33,6 +33,10 @@ class Particle {
         }
 
         this.updatePosition();
+    }
+
+    initSpeed() {
+        return Math.random() * 3 - 1.5;
     }
 
     updatePosition() {
@@ -103,20 +107,35 @@ function animateParticles() {
 }
 
 // Event listeners for mouse interaction
-svg.addEventListener("mousedown", (event) => {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-    mouse.isDown = true;
-});
-
+// svg.addEventListener("mousedown", (event) => {
+//     mouse.x = event.clientX;
+//     mouse.y = event.clientY;
+//     mouse.isDown = true;
+// });
+//
 svg.addEventListener("mouseup", () => {
     mouse.isDown = false;
 });
 
 svg.addEventListener("mousemove", (event) => {
     mouse.x = event.clientX;
-    mouse.y = event.clientY;
 });
+
+line.addEventListener("mousedown", (event) => {
+    console.log("Clicked on line")
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+    mouse.isDown = true;
+})
+
+// line.addEventListener("mouseup", () => {
+//     mouse.isDown = false;
+// });
+//
+// line.addEventListener("mousemove", (event) => {
+//     mouse.x = event.clientX;
+//     mouse.y = event.clientY;
+// });
 
 window.addEventListener("resize", () => {
     svg.setAttribute("width", window.innerWidth);
