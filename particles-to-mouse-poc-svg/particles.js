@@ -8,13 +8,13 @@ const particleCount = 200;
 let mouse = { x: 0, y: 0, isDown: false };
 
 class Particle {
-    constructor(x, y) {
-        this.createNew(x, y);
+    constructor( isRespawn) {
+        this.createNew(false);
     }
 
-    createNew(x, y, isRespawn = false) {
-        this.x = x || Math.random() * window.innerWidth;
-        this.y = y || Math.random() * window.innerHeight;
+    createNew(isRespawn) {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
         this.size = Math.random() * 10 + 1;
         this.speedX = Math.random() * 3 - 1.5;
         this.speedY = Math.random() * 3 - 1.5;
@@ -27,7 +27,9 @@ class Particle {
         }
         this.element.setAttribute("r", this.size / 2);
         this.element.setAttribute("fill", "white");
-        svg.appendChild(this.element);
+        if (!isRespawn) {
+            svg.appendChild(this.element);
+        }
 
         this.updatePosition();
     }
@@ -68,7 +70,7 @@ class Particle {
             this.lifetime--;
             this.updatePosition();
         } else {
-            this.createNew();
+            this.createNew(true);
         }
     }
 }
