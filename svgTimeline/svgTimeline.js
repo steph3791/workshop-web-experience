@@ -3,10 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initiale ViewBox-Parameter
     let zoomLevel = 1;
+    // Initiale ViewBox-Parameter mit Padding
+    let padding = 50; // Beispielwert, je nach Bedarf anpassen
     let viewBox = {
-        x: 0,
+        x: -padding,
         y: 0,
-        width: 1440,
+        width: 1440 + padding,
         height: 100,
     };
 
@@ -20,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const timelineLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     timelineLine.setAttribute('x1', '0');
     timelineLine.setAttribute('y1', '50'); // Mittig auf der Y-Achse
-    timelineLine.setAttribute('x2', '1440');
+    timelineLine.setAttribute('x2', '1600');
     timelineLine.setAttribute('y2', '50');
     timelineLine.setAttribute('stroke', 'black');
     timelineLine.setAttribute('stroke-width', '2');
@@ -35,7 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
             length: 20,   // Länge der Tick-Markierung
             minZoomLevel: 1,
             showLabel: true,
-            labelOffset: 20, // Abstand des Labels unterhalb des Tick-Strichs
+            labelOffset: 30, // Abstand des Labels unterhalb des Tick-Strichs
+            fontSize: 16,    // Schriftgröße in Pixeln
         },
         {
             interval: 30, // Halbstunden-Ticks
@@ -44,22 +47,25 @@ document.addEventListener("DOMContentLoaded", function () {
             minZoomLevel: 2,
             showLabel: true,
             labelOffset: 20,
+            fontSize: 14,    // Schriftgröße in Pixeln
         },
         {
             interval: 15, // Viertelstunden-Ticks
             className: 'timeline-vertical-line-quarterHour',
             length: 10,
-            minZoomLevel: 5,
+            minZoomLevel: 4,
             showLabel: true,
-            labelOffset: 20,
+            labelOffset: 10,
+            fontSize: 12,    // Schriftgröße in Pixeln
         },
         {
             interval: 5, // 5-Minuten-Ticks
             className: 'timeline-vertical-line-fiveMinutes',
             length: 7,
             minZoomLevel: 8,
-            showLabel: true,
-            labelOffset: 10, // Kürzerer Abstand für 5-Minuten-Ticks
+            showLabel: false,
+            labelOffset: 5, // Kürzerer Abstand für 5-Minuten-Ticks
+            fontSize: 10,    // Schriftgröße in Pixeln
         },
         {
             interval: 1, // 1-Minuten-Ticks
@@ -67,20 +73,27 @@ document.addEventListener("DOMContentLoaded", function () {
             length: 5,
             minZoomLevel: 16,
             showLabel: false,
-            labelOffset: 10,
+            labelOffset: 2,
+            fontSize: 10,    // Schriftgröße in Pixeln
         },
     ];
 
     // Funktion zur Berechnung der Schriftgröße
     function getFontSize() {
         let fontSize;
-        if (zoomLevel <= 4) {
-            fontSize = 20; // Größere Schriftgröße bei Zoomlevel 1–4
+        if (zoomLevel <= 14) {
+            fontSize = 24 / zoomLevel; // Größere Schriftgröße bei Zoomlevel 1–4
         } else {
-            fontSize = 58 / zoomLevel; // Kleinere Schriftgröße bei höheren Zoomlevels
+            fontSize = 52 / zoomLevel; // Kleinere Schriftgröße bei höheren Zoomlevels
         }
         console.log(`ZoomLevel: ${zoomLevel}, FontSize: ${fontSize}`);
         return fontSize;
+    }
+
+    // Funktion zum Berechnen der Pixel pro Minute
+    function getPixelsPerMinute() {
+        const svgRect = svg.getBoundingClientRect();
+        return svgRect.width / viewBox.width;
     }
 
 
@@ -90,6 +103,10 @@ document.addEventListener("DOMContentLoaded", function () {
         svg.querySelectorAll('.tick').forEach(tick => tick.remove());
         svg.querySelectorAll('.tick-label').forEach(label => label.remove());
 
+        const pixelsPerMinute = getPixelsPerMinute();
+        const minPixelDistance = 40; // Mindestpixelabstand zwischen Labels
+        const minTickInterval = Math.ceil(minPixelDistance / pixelsPerMinute);
+
         let currentLabelTickType = null;
 
         // Bestimme den höchstaufgelösten sichtbaren Tick-Typ für Beschriftungen
@@ -98,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (zoomLevel >= tickType.minZoomLevel) {
                 if (tickType.showLabel) {
                     currentLabelTickType = tickType;
-                    console.log(`Aktueller Beschriftungs-Tick-Typ: ${tickType.className}`);
                     break;
                 }
             }
@@ -138,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 tick.setAttribute('class', `tick ${tickType.className}`);
                 tick.setAttribute('data-x', x); // Attribut zur Identifikation
                 svg.appendChild(tick);
-                console.log(`Erstelle neuen Tick bei x=${x} mit Klassen: ${tick.getAttribute('class')}`);
             } else {
                 console.log(`Tick bereits vorhanden bei x=${x}`);
             }
@@ -154,11 +169,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     label.setAttribute('y', y2 + tickType.labelOffset);
                     label.setAttribute('class', 'tick-label');
                     label.setAttribute('data-x', x); // Attribut zur Identifikation
-                    label.style.fontSize = getFontSize() + 'px'; // Schriftgröße über style setzen
+                    label.style.fontSize = getFontSize(); // Schriftgröße über style setzen
                     label.setAttribute('stroke', 'none');
                     label.textContent = formatTime(i);
                     svg.appendChild(label);
-                    console.log(`Erstelle Beschriftung bei x=${x} mit Text: ${label.textContent}`);
+                    setTimeout(() => {
+                        label.style.opacity = 1;
+                    }, 10);
                 } else {
                     console.log(`Beschriftung bereits vorhanden bei x=${x}`);
                 }
@@ -173,23 +190,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${hours}:${mins.toString().padStart(2, '0')}`;
     }
 
-    // Funktion zum Aktualisieren der ViewBox beim Zoomen
+    // In der updateViewBox Funktion:
     function updateViewBox(mouseX) {
         const svgRect = svg.getBoundingClientRect();
         const mouseXRelativeToSvg = mouseX - svgRect.left;
 
         const mouseXInViewBox = viewBox.x + (mouseXRelativeToSvg / svgRect.width) * viewBox.width;
 
-        const newWidth = 1440 / zoomLevel;
+        const newWidth = 1440 / zoomLevel + padding; // Padding berücksichtigen
 
         viewBox.x = mouseXInViewBox - ((mouseXInViewBox - viewBox.x) * (newWidth / viewBox.width));
 
         // Begrenzungen sicherstellen
-        if (viewBox.x < 0) {
-            viewBox.x = 0;
+        if (viewBox.x < -padding) {
+            viewBox.x = -padding;
         }
-        if (viewBox.x + newWidth > 1440) {
-            viewBox.x = 1440 - newWidth;
+        if (viewBox.x + newWidth > 1440 + padding) {
+            viewBox.x = 1440 + padding - newWidth;
         }
 
         viewBox.width = newWidth;
@@ -200,14 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event Listener für Mausrad zum Zoomen
     svg.addEventListener('wheel', function (e) {
         e.preventDefault();
-        const scaleAmount = 1.1;
+        const scaleAmount = 1.2;
         if (e.deltaY < 0) {
             // Reinzoomen
             zoomLevel *= scaleAmount;
             console.log('Reinzoomen, zoomLevel:', zoomLevel);
-            if (zoomLevel > 32) {
-                zoomLevel = 32; // Maximales Zoomlevel
-                console.log(`ZoomLevel auf 32 begrenzt`);
+            if (zoomLevel > 22) {
+                zoomLevel = 22; // Maximales Zoomlevel
+                console.log(`ZoomLevel auf 22 begrenzt`);
             }
         } else {
             // Rauszoomen

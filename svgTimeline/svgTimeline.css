@@ -16,10 +16,12 @@ html, body {
 }
 svg {
     width: 80%;
-    /*margin: 0 auto;*/
+    margin: 0 auto;
     filter: drop-shadow(0px 0px 1em cyan);
     display: block;
+    justify-content: flex-end;
     stroke-linecap: round;
+    overflow: visible;
 }
 
 svg:active {
@@ -32,41 +34,40 @@ svg:active {
 
 .timeline-horizontal-line {
     stroke-width: 5px;
-    stroke: cyan;
+    stroke: black;
 }
 
 .timeline-vertical-line-hour {
     stroke-width: 1px;
     stroke-opacity: 1;
-    stroke: purple;
+    stroke: black;
 }
 
 .timeline-vertical-line-halfHour {
     stroke-width: 1px;
     stroke-opacity: 1;
-    stroke: blue;
+    stroke: black;
 }
 
 .timeline-vertical-line-quarterHour {
     stroke-width: 1px;
     stroke-opacity: 1;
-    stroke: orange;
+    stroke: black;
 }
 
 .timeline-vertical-line-fiveMinutes {
-    stroke-width:   1px;
+    stroke-width:   0.5px;
     stroke-opacity: 1;
-    stroke: red;
+    stroke: black;
 }
 
 .timeline-vertical-line-oneMinute {
     stroke-width:   0.5px;
     stroke-opacity: 1;
-    stroke: grey;
+    stroke: black;
 }
 
 .tick {
-    /* Gemeinsame Tick-Stile können hier definiert werden */
     transition: opacity 0.3s ease; /* Sanfte Übergänge für Ticks */
 }
 
