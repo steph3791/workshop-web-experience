@@ -222,8 +222,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Reinzoomen
             zoomLevel *= scaleAmount;
             console.log('Reinzoomen, zoomLevel:', zoomLevel);
-            if (zoomLevel > 22) {
-                zoomLevel = 22; // Maximales Zoomlevel
+            if (zoomLevel > 32) {
+                zoomLevel = 32; // Maximales Zoomlevel
                 console.log(`ZoomLevel auf 22 begrenzt`);
             }
         } else {

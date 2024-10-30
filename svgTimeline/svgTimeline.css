@@ -63,8 +63,8 @@ svg:active {
 
 .timeline-vertical-line-oneMinute {
     stroke-width:   0.5px;
-    stroke-opacity: 1;
-    stroke: black;
+    stroke-opacity: 0.5;
+    stroke: grey;
 }
 
 .tick {
