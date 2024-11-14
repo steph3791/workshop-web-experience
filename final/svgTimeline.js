@@ -1,5 +1,8 @@
+import {ParticleSystem} from "./particles2.js";
+
 document.addEventListener("DOMContentLoaded", function () {
     const svg = document.getElementById('timeline');
+    const particleSystem = new ParticleSystem(svg);
 
     // Initiale ViewBox-Parameter
     let zoomLevel = 1;
@@ -14,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Pan-Funktionalität
     let isPanning = false;
-    let startPoint = { x: 0, y: 0 };
+    let startPoint = {x: 0, y: 0};
     let startViewBoxX = 0;
 
 
@@ -217,6 +220,11 @@ document.addEventListener("DOMContentLoaded", function () {
         svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
     }
 
+    function renderParticles() {
+        particleSystem.animate()
+        requestAnimationFrame(renderParticles);
+    }
+
     // Event Listener für Mausrad zum Zoomen
     svg.addEventListener('wheel', function (e) {
         e.preventDefault();
@@ -247,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.button === 2) {
             console.debug("right button click")
             isPanning = true;
-            startPoint = { x: e.clientX, y: e.clientY };
+            startPoint = {x: e.clientX, y: e.clientY};
             startViewBoxX = viewBox.x;
         }
     });
@@ -288,6 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initiales Zeichnen der Tick-Markierungen
     updateTicks();
+    renderParticles()
     console.log("Finished loading svgTimeline")
 });
 
