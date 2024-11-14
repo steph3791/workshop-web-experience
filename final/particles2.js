@@ -5,8 +5,10 @@ export class Particle {
      */
     constructor(svg) {
         this.svgParent = svg;
-        this.rangeWidth = svg.getBoundingClientRect().width;
-        this.rangeHeight = svg.getBoundingClientRect().height;
+        const [minX, minY, width, height] = svg.getAttribute('viewBox').split(' ').map(Number);
+        this.rangeWidth = width;
+        this.rangeHeight = height;
+        console.log("RangeWidth: " + this.rangeWidth);
         this.createNew(false);
     }
 

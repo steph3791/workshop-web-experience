@@ -6,10 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const svg = document.getElementById("timeline");
     const line = document.getElementById("timelineLine");
 
-    const svgWidth = svg.getBoundingClientRect().width;
-    const svgHeight = svg.getBoundingClientRect().height;
-
-    console.log("SVG Width: " + svgWidth + " SVGHeight: " + svgHeight);
     let mouse = {x: 0, y: 0, isDown: false};
 
     const particleSystem = new ParticleSystem(svg);
