@@ -282,6 +282,10 @@ document.addEventListener("DOMContentLoaded", function () {
         isPanning = false;
     });
 
+    svg.addEventListener('contextmenu', function (event) {
+        event.preventDefault()
+    })
+
     // Initiales Zeichnen der Tick-Markierungen
     updateTicks();
     console.log("Finished loading svgTimeline")
