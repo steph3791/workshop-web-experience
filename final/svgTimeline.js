@@ -218,6 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
         viewBox.width = newWidth;
 
         svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        particleSystem.udateViewBox();
     }
 
     function renderParticles() {

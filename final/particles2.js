@@ -12,10 +12,11 @@ export class Particle {
         this.createNew(false);
     }
 
-    createNew(isRespawn) {
+    createNew(isRespawn, size = 10) {
+        const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
         this.x = Math.random() * this.rangeWidth;
         this.y = Math.random() * this.rangeHeight;
-        this.size = Math.random() * 10 + 1;
+        this.size = Math.max(1, Math.random() * width/150 + 1);
         this.speedX = this.initSpeed();
         this.speedY = this.initSpeed();
         this.pullForce = 1;
@@ -134,13 +135,18 @@ export class Particle {
         this.targetX = targetX;
         this.targetY = targetY;
     }
+
+    updateViewBox() {
+        const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
+        this.size = Math.max(1, Math.random() * width/150 + 1);
+        this.element.setAttribute("r", this.size / 2);
+        console.log("new particle size: " +this.size);
+    }
 }
 
 export class ParticleSystem {
     constructor(svg) {
         this.svgParent = svg;
-        this.rangeWidth = svg.getBoundingClientRect().width;
-        this.rangeHeight = svg.getBoundingClientRect().height;
         this.particles = [];
         this.placedParticles = [];
         this.particleCount = 500;
@@ -161,6 +167,17 @@ export class ParticleSystem {
         })
         this.placedParticles.splice(0, this.placedParticles.length - 1);
         console.log("PlacedParticles: " + this.placedParticles.length + " Particles: " + this.particles.length + " Children: " + this.svgParent.children.length)
+    }
+
+    async udateViewBox() {
+        console.log("Update particle viewBox")
+        this.particles.forEach(particle => {
+            particle.updateViewBox();
+        });
+
+        this.placedParticles.forEach(p => {
+            p.updateViewBox()
+        })
     }
 }
 
