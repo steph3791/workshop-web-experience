@@ -229,21 +229,15 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(renderParticles);
     }
 
-    function addParticleTarget(clientX, clientY) {
-        // Create an SVG point object to hold the converted mouse coordinates
+    function addParticleTarget(clientX) {
         const svgPoint = svg.createSVGPoint();
         svgPoint.x = clientX;
-        svgPoint.y = clientY;
 
-        // Get the current transformation matrix (CTM) of the SVG
         const ctm = svg.getScreenCTM();
 
         // Transform the screen coordinates to SVG coordinates using the CTM
         const svgCoords = svgPoint.matrixTransform(ctm.inverse());
-
-        // Now `svgCoords.x` and `svgCoords.y` are in the SVG's coordinate system
-        console.log('SVG Coordinates: ', svgCoords.x, svgCoords.y);
-        particleSystem.goToTarget(svgCoords.x, svgCoords.y);
+        particleSystem.goToTarget(svgCoords.x, timelineLine.getAttribute('y1'));
     }
 
     // Event Listener für Mausrad zum Zoomen
@@ -282,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.button === 0) {
             console.debug("left button click")
             isMouseDown = true;
-            addParticleTarget(e.clientX, e.clientY);
+            addParticleTarget(e.clientX);
         }
     });
 
@@ -305,10 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
             updateTicks();
-            addParticleTarget(e.clientX, e.clientY);
         }
         if (isMouseDown) {
-            addParticleTarget(e.clientX, e.clientY);
+            addParticleTarget(e.clientX);
         }
 
     });
