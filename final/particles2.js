@@ -1,14 +1,12 @@
 export class Particle {
     /**
      * Creates a new particle
-     * @param rangeWidth width of the spawn area of the particle
-     * @param rangeHeight height of the spawn area of the particle
-     * @param svgParentId the html id of the svg parent element of this particle. It is used to dynamically add and remove particles
+     * @param svg : SVGElement
      */
-    constructor(rangeWidth, rangeHeight, svgParentId) {
-        this.rangeWidth = rangeWidth;
-        this.rangeHeight = rangeHeight;
-        this.svgParentId = svgParentId;
+    constructor(svg) {
+        this.svgParent = svg;
+        this.rangeWidth = svg.getBoundingClientRect().width;
+        this.rangeHeight = svg.getBoundingClientRect().height;
         this.createNew(false);
     }
 
@@ -31,7 +29,7 @@ export class Particle {
         this.element.setAttribute("r", this.size / 2);
         this.element.setAttribute("fill", "white");
         if (!isRespawn) {
-            document.getElementById(this.svgParentId).appendChild(this.element);
+            this.svgParent.appendChild(this.element);
         }
         this.updatePosition();
     }
@@ -104,8 +102,8 @@ export class Particle {
         placedParticles.push(this);
         let index = particles.indexOf(this);
         particles.splice(index, 1);
-        document.getElementById(this.svgParentId).removeChild(this.element);
-        particles.push(new Particle())
+        this.svgParent.removeChild(this.element);
+        particles.push(new Particle(this.svgParent))
     }
 
     /**
@@ -136,7 +134,31 @@ export class Particle {
     }
 }
 
-class ParticleSystem {
-    constructor() {}
+export class ParticleSystem {
+    constructor(svg) {
+        this.svgParent = svg;
+        this.rangeWidth = svg.getBoundingClientRect().width;
+        this.rangeHeight = svg.getBoundingClientRect().height;
+        this.particles = [];
+        this.placedParticles = [];
+        this.particleCount = 500;
+
+        for (let i = 0; i < this.particleCount; i++) {
+            this.particles.push(new Particle(this.svgParent));
+        }
+    }
+
+    animate() {
+        this.particles.forEach(particle => {
+            particle.update();
+            particle.setIsSimulated(true)
+        });
+
+        this.placedParticles.forEach(p => {
+            if (this.svgParent.contains(p.getElement())) this.svgParent.removeChild(p.getElement());
+        })
+        this.placedParticles.splice(0, this.placedParticles.length - 1);
+        console.log("PlacedParticles: " + this.placedParticles.length + " Particles: " + this.particles.length + " Children: " + this.svgParent.children.length)
+    }
 }
 

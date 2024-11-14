@@ -1,4 +1,5 @@
-import {Particle} from './particles2.js';
+import {Particle, ParticleSystem} from './particles2.js';
+
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Loading particles")
@@ -9,29 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const svgHeight = svg.getBoundingClientRect().height;
 
     console.log("SVG Width: " + svgWidth + " SVGHeight: " + svgHeight);
-    const particles = [];
-    const placedParticles = [];
-    const particleCount = 500;
     let mouse = {x: 0, y: 0, isDown: false};
 
-    function initParticles() {
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle(svgWidth, svgHeight, 'timeline'));
-        }
-    }
+    const particleSystem = new ParticleSystem(svg);
 
-    function animateParticles() {
-        particles.forEach(particle => {
-            particle.update();
-            particle.setIsSimulated(true)
-        });
-
-        placedParticles.forEach(p => {
-            if (svg.contains(p.getElement())) svg.removeChild(p.getElement());
-        })
-        placedParticles.splice(0, placedParticles.length - 1);
-        console.log("PlacedParticles: " + placedParticles.length + " Particles: " + particles.length + " Children: " + svg.children.length)
-        requestAnimationFrame(animateParticles);
+    function start() {
+        particleSystem.animate()
+        requestAnimationFrame(start);
     }
 
     svg.addEventListener("mouseup", () => {
@@ -41,9 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     svg.addEventListener("mousemove", (event) => {
         mouse.x = event.clientX;
-        if (mouse.isDown) {
-            drawTimerange()
-        }
     });
 
     line.addEventListener("mousedown", (event) => {
@@ -51,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
         mouse.x = event.clientX;
         mouse.y = event.clientY;
         mouse.isDown = true;
-        initializeTimerangeDraw()
     })
 
     // function initializeTimerangeDraw() {
@@ -75,8 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // });
 
 // Initialize and start the animation
-    initParticles();
-    animateParticles();
+//     initParticles();
+//     animateParticles();
+    start()
 })
 
 
