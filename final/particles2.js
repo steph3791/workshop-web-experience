@@ -102,11 +102,11 @@ export class Particle {
 
     freeze() {
         this.setIsSimulated(false)
-        placedParticles.push(this);
-        let index = particles.indexOf(this);
-        particles.splice(index, 1);
-        this.svgParent.removeChild(this.element);
-        particles.push(new Particle(this.svgParent))
+        // placedParticles.push(this);
+        // let index = particles.indexOf(this);
+        // particles.splice(index, 1);
+        // this.svgParent.removeChild(this.element);
+        // particles.push(new Particle(this.svgParent))
     }
 
     /**
@@ -178,6 +178,12 @@ export class ParticleSystem {
         this.placedParticles.forEach(p => {
             p.updateViewBox()
         })
+    }
+
+    goToTarget(clientX, clientY) {
+        this.particles.forEach(particle => {
+            particle.setTarget(clientX, clientY);
+        });
     }
 }
 

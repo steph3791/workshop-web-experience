@@ -226,6 +226,10 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(renderParticles);
     }
 
+    function addParticleTarget(clientX, clientY) {
+        particleSystem.goToTarget(clientX, clientY);
+    }
+
     // Event Listener für Mausrad zum Zoomen
     svg.addEventListener('wheel', function (e) {
         e.preventDefault();
@@ -258,6 +262,23 @@ document.addEventListener("DOMContentLoaded", function () {
             isPanning = true;
             startPoint = {x: e.clientX, y: e.clientY};
             startViewBoxX = viewBox.x;
+        }
+        if (e.button === 0) {
+            console.debug("left button click")
+            // Create an SVG point object to hold the converted mouse coordinates
+            const svgPoint = svg.createSVGPoint();
+            svgPoint.x = e.clientX;
+            svgPoint.y = e.clientY;
+
+            // Get the current transformation matrix (CTM) of the SVG
+            const ctm = svg.getScreenCTM();
+
+            // Transform the screen coordinates to SVG coordinates using the CTM
+            const svgCoords = svgPoint.matrixTransform(ctm.inverse());
+
+            // Now `svgCoords.x` and `svgCoords.y` are in the SVG's coordinate system
+            console.log('SVG Coordinates: ', svgCoords.x, svgCoords.y);
+            addParticleTarget(svgCoords.x, svgCoords.y);
         }
     });
 
