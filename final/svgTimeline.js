@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let startPoint = {x: 0, y: 0};
     let startViewBoxX = 0;
 
+    //Drag Funktion
+    let isMouseDown = false;
+
 
     // Horizontale Linie für den Zeitstrahl zeichnen
     const timelineLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -227,7 +230,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function addParticleTarget(clientX, clientY) {
-        particleSystem.goToTarget(clientX, clientY);
+        // Create an SVG point object to hold the converted mouse coordinates
+        const svgPoint = svg.createSVGPoint();
+        svgPoint.x = clientX;
+        svgPoint.y = clientY;
+
+        // Get the current transformation matrix (CTM) of the SVG
+        const ctm = svg.getScreenCTM();
+
+        // Transform the screen coordinates to SVG coordinates using the CTM
+        const svgCoords = svgPoint.matrixTransform(ctm.inverse());
+
+        // Now `svgCoords.x` and `svgCoords.y` are in the SVG's coordinate system
+        console.log('SVG Coordinates: ', svgCoords.x, svgCoords.y);
+        particleSystem.goToTarget(svgCoords.x, svgCoords.y);
     }
 
     // Event Listener für Mausrad zum Zoomen
@@ -265,20 +281,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (e.button === 0) {
             console.debug("left button click")
-            // Create an SVG point object to hold the converted mouse coordinates
-            const svgPoint = svg.createSVGPoint();
-            svgPoint.x = e.clientX;
-            svgPoint.y = e.clientY;
-
-            // Get the current transformation matrix (CTM) of the SVG
-            const ctm = svg.getScreenCTM();
-
-            // Transform the screen coordinates to SVG coordinates using the CTM
-            const svgCoords = svgPoint.matrixTransform(ctm.inverse());
-
-            // Now `svgCoords.x` and `svgCoords.y` are in the SVG's coordinate system
-            console.log('SVG Coordinates: ', svgCoords.x, svgCoords.y);
-            addParticleTarget(svgCoords.x, svgCoords.y);
+            isMouseDown = true;
+            addParticleTarget(e.clientX, e.clientY);
         }
     });
 
@@ -301,11 +305,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
             updateTicks();
+            addParticleTarget(e.clientX, e.clientY);
         }
+        if (isMouseDown) {
+            addParticleTarget(e.clientX, e.clientY);
+        }
+
     });
 
     svg.addEventListener('mouseup', function () {
         isPanning = false;
+        isMouseDown = false;
     });
 
     svg.addEventListener('mouseleave', function () {

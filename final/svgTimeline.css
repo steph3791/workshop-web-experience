@@ -76,4 +76,5 @@ svg:active {
     font-weight: lighter;
     stroke: none;
     fill: black;
+    user-select: none;
 }

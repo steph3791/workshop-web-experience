@@ -70,8 +70,9 @@ export class Particle {
                     const dy = this.targetY - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 10) {
-                        this.size = Math.min(15, this.size + 1);
-                        this.element.setAttribute("r", this.size / 2);
+                        this.updateSize()
+                        // this.size = Math.min(15, this.size + 1);
+                        // this.element.setAttribute("r", this.size / 2);
                     }
                     if (dist < 5) {
                         this.freeze()
@@ -137,10 +138,14 @@ export class Particle {
     }
 
     updateViewBox() {
-        const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
-        this.size = Math.max(1, Math.random() * width/150 + 1);
-        this.element.setAttribute("r", this.size / 2);
+        this.updateSize(1)
         console.log("new particle size: " +this.size);
+    }
+
+    updateSize(min = 5) {
+        const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
+        this.size = Math.max(min, Math.random() * width/150 + 1);
+        this.element.setAttribute("r", this.size / 2);
     }
 }
 
