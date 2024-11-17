@@ -139,70 +139,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // // Funktion zum Hinzufügen von Ticks für einen bestimmten Tick-Typ
-    // function addTicksForTickType(tickType, showLabel) {
-    //     const startX = viewBox.x;
-    //     const endX = viewBox.x + viewBox.width;
-    //
-    //     const startMinute = Math.floor(startX);
-    //     const endMinute = Math.ceil(endX);
-    //
-    //     const firstTick = Math.ceil(startMinute / tickType.interval) * tickType.interval;
-    //
-    //     for (let i = firstTick; i <= endMinute; i += tickType.interval) {
-    //         const x = i;
-    //         const y1 = 50 - tickType.length / 2;
-    //         const y2 = 50 + tickType.length / 2;
-    //
-    //         // Prüfen, ob der Tick bereits existiert
-    //         let tick = svg.querySelector(`.tick.${tickType.className}[data-x="${x}"]`);
-    //         if (!tick) {
-    //             tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    //             tick.setAttribute('x1', x);
-    //             tick.setAttribute('y1', y1);
-    //             tick.setAttribute('x2', x);
-    //             tick.setAttribute('y2', y2);
-    //             tick.setAttribute('class', `tick ${tickType.className}`);
-    //             tick.setAttribute('data-x', x); // Attribut zur Identifikation
-    //             svg.appendChild(tick);
-    //         }
-    //
-    //         // Beschriftungen hinzufügen
-    //         if (showLabel) {
-    //             // Prüfen, ob ein Label existiert
-    //             let existingLabel = svg.querySelector(`.tick-label[data-x="${x}"]`);
-    //             if (!existingLabel) {
-    //                 const labelHHMM = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    //                 const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    //                 labelHHMM.setAttribute('x', x);
-    //
-    //                 labelHHMM.setAttribute('y', y2 + tickType.labelOffset); // Standardposition
-    //                 labelHHMM.textContent = formatTime(i, tickType); // Standardformat hh:mm
-    //                 labelHHMM.setAttribute('class', 'tick-label'); // Standard-Stil
-    //
-    //                 labelHHMM.setAttribute('data-x', x);
-    //                 labelHHMM.style.fontSize = getFontSize();
-    //                 svg.appendChild(labelHHMM);
-    //
-    //                 // Unterschiedliche Y-Position für 5-Minuten-Ticks (oberhalb)
-    //                 if (tickType.interval === 5) {
-    //                     labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
-    //                     labelMinutes.textContent = formatTime(i, tickType); // Nur Minuten für 5-Minuten-Ticks
-    //                     labelMinutes.setAttribute('class', 'tick-label tick-label-above'); // Spezieller Stil für obere Labels
-    //
-    //                     labelMinutes.setAttribute('data-x', x);
-    //                     labelMinutes.style.fontSize = getFontSize();
-    //                     svg.appendChild(labelMinutes);
-    //                 }
-    //
-    //             } else if (tickType.interval === 5) {
-    //                 // Wenn ein unteres Label existiert, kein oberes hinzufügen
-    //                 console.log(`Label existiert bereits für x=${x}`);
-    //             }
-    //         }
-    //     }
-    // }
-
 
     function addTicksForTickType(tickType, showLabel) {
         const startX = viewBox.x;
@@ -237,14 +173,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 let existingLabelHHMM = svg.querySelector(`.tick-label[data-x="${x}"]`);
                 if (!existingLabelHHMM) {
                     // Standard-Label unterhalb des Tick-Strichs
-                    const labelHHMM = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    labelHHMM.setAttribute('x', x);
-                    labelHHMM.setAttribute('y', y2 + tickType.labelOffset); // Standardposition
-                    labelHHMM.textContent = formatTime(i, tickType); // Standardformat hh:mm
-                    labelHHMM.setAttribute('class', 'tick-label'); // Standard-Stil
-                    labelHHMM.setAttribute('data-x', x);
-                    labelHHMM.style.fontSize = getFontSize();
-                    svg.appendChild(labelHHMM);
+                    if (zoomLevel < 20 || (zoomLevel >= 20 && i % 15 === 0)) {
+                        const labelHHMM = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        labelHHMM.setAttribute('x', x);
+                        labelHHMM.setAttribute('y', y2 + tickType.labelOffset); // Standardposition
+                        labelHHMM.textContent = formatTime(i, tickType); // Standardformat hh:mm
+                        labelHHMM.setAttribute('class', 'tick-label'); // Standard-Stil
+                        labelHHMM.setAttribute('data-x', x);
+                        labelHHMM.style.fontSize = getFontSize();
+                        svg.appendChild(labelHHMM);
+                    }
                 }
 
                 // **Unterschiedliche Y-Position für 5-Minuten-Ticks (oberhalb)**
@@ -252,21 +190,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Prüfen, ob ein Label oberhalb existiert
                     let existingLabelMinutes = svg.querySelector(`.tick-label-above[data-x="${x}"]`);
                     if (!existingLabelMinutes) {
-                        const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                        labelMinutes.setAttribute('x', x);
-                        labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
-                        labelMinutes.textContent = formatMinutes(i, tickType); // Nur Minuten für 5-Minuten-Ticks
-                        labelMinutes.setAttribute('class', 'tick-label-above'); // Spezieller Stil für obere Labels
-                        labelMinutes.setAttribute('data-x', x);
-                        labelMinutes.style.fontSize = getFontSize();
-                        svg.appendChild(labelMinutes);
+                        // Verhindere die Anzeige von Minuten, die durch 15 teilbar sind oder 0 sind
+                        const minutes = i % 60;
+                        if (minutes !== 0 && minutes % 15 !== 0) {
+                            const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                            labelMinutes.setAttribute('x', x);
+                            labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
+                            labelMinutes.textContent = formatMinutes(i, tickType); // Nur Minuten für 5-Minuten-Ticks
+                            labelMinutes.setAttribute('class', 'tick-label-above'); // Spezieller Stil für obere Labels
+                            labelMinutes.setAttribute('data-x', x);
+                            labelMinutes.style.fontSize = getFontSize();
+                            svg.appendChild(labelMinutes);
+                        }
                     }
                 }
             }
         }
     }
-
-
 
 
 
