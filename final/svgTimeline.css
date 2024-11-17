@@ -78,6 +78,7 @@ svg:active {
     stroke: none;
     fill: black;
     user-select: none;
+    /*dominant-baseline: central; !* Verhindert vertikales Springen bei verschiedenen Schriftgrößen *!*/
 }
 
 

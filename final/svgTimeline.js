@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             length: 20,   // Länge der Tick-Markierung
             minZoomLevel: 1,
             showLabel: true,
-            labelOffset: 30, // Abstand des Labels unterhalb des Tick-Strichs
+            labelOffset: 15, // Abstand des Labels unterhalb des Tick-Strichs
             fontSize: 15,    // Schriftgröße in Pixeln
         },
         {
@@ -55,16 +55,16 @@ document.addEventListener("DOMContentLoaded", function () {
             length: 15,
             minZoomLevel: 2,
             showLabel: true,
-            labelOffset: 20,
+            labelOffset: 15,
             fontSize: 14,    // Schriftgröße in Pixeln
         },
         {
             interval: 15, // Viertelstunden-Ticks
             className: 'timeline-vertical-line-quarterHour',
             length: 10,
-            minZoomLevel: 4,
+            minZoomLevel: 8,
             showLabel: true,
-            labelOffset: 10,
+            labelOffset: 13,
             fontSize: 12,    // Schriftgröße in Pixeln
         },
         {
@@ -83,17 +83,25 @@ document.addEventListener("DOMContentLoaded", function () {
             minZoomLevel: 25,
             showLabel: false,
             labelOffset: 2,
-            fontSize: 10,    // Schriftgröße in Pixeln
+            fontSize: 8,    // Schriftgröße in Pixeln
         },
     ];
 
     // Funktion zur Berechnung der Schriftgröße
     function getFontSize() {
         let fontSize;
-        if (zoomLevel <= 14) {
-            fontSize = 24 / zoomLevel; // Größere Schriftgröße bei Zoomlevel 1–4
-        } else {
-            fontSize = 52 / zoomLevel; // Kleinere Schriftgröße bei höheren Zoomlevels
+        if (zoomLevel <= 5) {
+            fontSize = 15 / zoomLevel; // Größere Schriftgröße bei Zoomlevel 1–4
+        } else if (zoomLevel > 5 && zoomLevel <= 10) {
+            fontSize = 20 / zoomLevel;
+        } else if (zoomLevel > 10 && zoomLevel <= 15) {
+            fontSize = 25 / zoomLevel;
+        } else if (zoomLevel > 15 && zoomLevel <= 20) {
+            fontSize = 28 / zoomLevel;
+        } else if (zoomLevel > 20 && zoomLevel <= 25) {
+            fontSize = 30 / zoomLevel;
+        } else if (zoomLevel > 25 && zoomLevel <= 32) {
+            fontSize = 40 / zoomLevel;
         }
         console.log(`ZoomLevel: ${zoomLevel}, FontSize: ${fontSize}`);
         return fontSize;
@@ -195,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (minutes !== 0 && minutes % 15 !== 0) {
                             const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                             labelMinutes.setAttribute('x', x);
-                            labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
+                            labelMinutes.setAttribute('y', y1 + 10); // Oberhalb des Tick-Strichs
                             labelMinutes.textContent = formatMinutes(i, tickType); // Nur Minuten für 5-Minuten-Ticks
                             labelMinutes.setAttribute('class', 'tick-label-above'); // Spezieller Stil für obere Labels
                             labelMinutes.setAttribute('data-x', x);
@@ -212,9 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Hilfsfunktion zur Formatierung der Zeit
     function formatTime(minutes, tickType) {
-        // if (tickType.interval === 5) {
-        //     return minutes % 60; // Nur Minuten anzeigen
-        // }
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         return `${hours}:${mins.toString().padStart(2, '0')}`; // Standardformat hh:mm
