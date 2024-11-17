@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             minZoomLevel: 1,
             showLabel: true,
             labelOffset: 30, // Abstand des Labels unterhalb des Tick-Strichs
-            fontSize: 16,    // Schriftgröße in Pixeln
+            fontSize: 15,    // Schriftgröße in Pixeln
         },
         {
             interval: 30, // Halbstunden-Ticks
@@ -71,16 +71,16 @@ document.addEventListener("DOMContentLoaded", function () {
             interval: 5, // 5-Minuten-Ticks
             className: 'timeline-vertical-line-fiveMinutes',
             length: 7,
-            minZoomLevel: 8,
-            showLabel: false,
-            labelOffset: 5, // Kürzerer Abstand für 5-Minuten-Ticks
-            fontSize: 10,    // Schriftgröße in Pixeln
+            minZoomLevel: 20, //Ticks werden bei Zoomlevel >= 18 angezeigt
+            showLabel: true,
+            labelOffset: 10, // Kürzerer Abstand für 5-Minuten-Ticks
+            fontSize: 8,    // Schriftgröße in Pixeln
         },
         {
             interval: 1, // 1-Minuten-Ticks
             className: 'timeline-vertical-line-oneMinute',
             length: 5,
-            minZoomLevel: 16,
+            minZoomLevel: 25,
             showLabel: false,
             labelOffset: 2,
             fontSize: 10,    // Schriftgröße in Pixeln
@@ -111,6 +111,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Entferne bestehende Ticks und Beschriftungen
         svg.querySelectorAll('.tick').forEach(tick => tick.remove());
         svg.querySelectorAll('.tick-label').forEach(label => label.remove());
+        svg.querySelectorAll('.tick-label-above').forEach(label => label.remove());
+
 
         const pixelsPerMinute = getPixelsPerMinute();
         const minPixelDistance = 40; // Mindestpixelabstand zwischen Labels
@@ -137,7 +139,71 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Funktion zum Hinzufügen von Ticks für einen bestimmten Tick-Typ
+    // // Funktion zum Hinzufügen von Ticks für einen bestimmten Tick-Typ
+    // function addTicksForTickType(tickType, showLabel) {
+    //     const startX = viewBox.x;
+    //     const endX = viewBox.x + viewBox.width;
+    //
+    //     const startMinute = Math.floor(startX);
+    //     const endMinute = Math.ceil(endX);
+    //
+    //     const firstTick = Math.ceil(startMinute / tickType.interval) * tickType.interval;
+    //
+    //     for (let i = firstTick; i <= endMinute; i += tickType.interval) {
+    //         const x = i;
+    //         const y1 = 50 - tickType.length / 2;
+    //         const y2 = 50 + tickType.length / 2;
+    //
+    //         // Prüfen, ob der Tick bereits existiert
+    //         let tick = svg.querySelector(`.tick.${tickType.className}[data-x="${x}"]`);
+    //         if (!tick) {
+    //             tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    //             tick.setAttribute('x1', x);
+    //             tick.setAttribute('y1', y1);
+    //             tick.setAttribute('x2', x);
+    //             tick.setAttribute('y2', y2);
+    //             tick.setAttribute('class', `tick ${tickType.className}`);
+    //             tick.setAttribute('data-x', x); // Attribut zur Identifikation
+    //             svg.appendChild(tick);
+    //         }
+    //
+    //         // Beschriftungen hinzufügen
+    //         if (showLabel) {
+    //             // Prüfen, ob ein Label existiert
+    //             let existingLabel = svg.querySelector(`.tick-label[data-x="${x}"]`);
+    //             if (!existingLabel) {
+    //                 const labelHHMM = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    //                 const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    //                 labelHHMM.setAttribute('x', x);
+    //
+    //                 labelHHMM.setAttribute('y', y2 + tickType.labelOffset); // Standardposition
+    //                 labelHHMM.textContent = formatTime(i, tickType); // Standardformat hh:mm
+    //                 labelHHMM.setAttribute('class', 'tick-label'); // Standard-Stil
+    //
+    //                 labelHHMM.setAttribute('data-x', x);
+    //                 labelHHMM.style.fontSize = getFontSize();
+    //                 svg.appendChild(labelHHMM);
+    //
+    //                 // Unterschiedliche Y-Position für 5-Minuten-Ticks (oberhalb)
+    //                 if (tickType.interval === 5) {
+    //                     labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
+    //                     labelMinutes.textContent = formatTime(i, tickType); // Nur Minuten für 5-Minuten-Ticks
+    //                     labelMinutes.setAttribute('class', 'tick-label tick-label-above'); // Spezieller Stil für obere Labels
+    //
+    //                     labelMinutes.setAttribute('data-x', x);
+    //                     labelMinutes.style.fontSize = getFontSize();
+    //                     svg.appendChild(labelMinutes);
+    //                 }
+    //
+    //             } else if (tickType.interval === 5) {
+    //                 // Wenn ein unteres Label existiert, kein oberes hinzufügen
+    //                 console.log(`Label existiert bereits für x=${x}`);
+    //             }
+    //         }
+    //     }
+    // }
+
+
     function addTicksForTickType(tickType, showLabel) {
         const startX = viewBox.x;
         const endX = viewBox.x + viewBox.width;
@@ -163,41 +229,63 @@ document.addEventListener("DOMContentLoaded", function () {
                 tick.setAttribute('class', `tick ${tickType.className}`);
                 tick.setAttribute('data-x', x); // Attribut zur Identifikation
                 svg.appendChild(tick);
-            } else {
-                console.log(`Tick bereits vorhanden bei x=${x}`);
             }
 
-            // Beschriftungen hinzufügen, wenn es der aktuelle Tick-Typ ist
+            // Beschriftungen hinzufügen
             if (showLabel) {
-                // Prüfen, ob bereits ein Label an dieser Position existiert
-                let existingLabel = svg.querySelector(`.tick-label[data-x="${x}"]`);
-                if (!existingLabel) {
-                    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    label.setAttribute('x', x);
-                    // Verwendung des spezifischen labelOffset für die y-Position
-                    label.setAttribute('y', y2 + tickType.labelOffset);
-                    label.setAttribute('class', 'tick-label');
-                    label.setAttribute('data-x', x); // Attribut zur Identifikation
-                    label.style.fontSize = getFontSize(); // Schriftgröße über style setzen
-                    label.setAttribute('stroke', 'none');
-                    label.textContent = formatTime(i);
-                    svg.appendChild(label);
-                    setTimeout(() => {
-                        label.style.opacity = 1;
-                    }, 10);
-                } else {
-                    console.log(`Beschriftung bereits vorhanden bei x=${x}`);
+                // **Prüfen, ob ein Standard-Label unterhalb existiert**
+                let existingLabelHHMM = svg.querySelector(`.tick-label[data-x="${x}"]`);
+                if (!existingLabelHHMM) {
+                    // Standard-Label unterhalb des Tick-Strichs
+                    const labelHHMM = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    labelHHMM.setAttribute('x', x);
+                    labelHHMM.setAttribute('y', y2 + tickType.labelOffset); // Standardposition
+                    labelHHMM.textContent = formatTime(i, tickType); // Standardformat hh:mm
+                    labelHHMM.setAttribute('class', 'tick-label'); // Standard-Stil
+                    labelHHMM.setAttribute('data-x', x);
+                    labelHHMM.style.fontSize = getFontSize();
+                    svg.appendChild(labelHHMM);
+                }
+
+                // **Unterschiedliche Y-Position für 5-Minuten-Ticks (oberhalb)**
+                if (tickType.interval === 5 && !existingLabelHHMM) {
+                    // Prüfen, ob ein Label oberhalb existiert
+                    let existingLabelMinutes = svg.querySelector(`.tick-label-above[data-x="${x}"]`);
+                    if (!existingLabelMinutes) {
+                        const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        labelMinutes.setAttribute('x', x);
+                        labelMinutes.setAttribute('y', y1 - 10); // Oberhalb des Tick-Strichs
+                        labelMinutes.textContent = formatMinutes(i, tickType); // Nur Minuten für 5-Minuten-Ticks
+                        labelMinutes.setAttribute('class', 'tick-label-above'); // Spezieller Stil für obere Labels
+                        labelMinutes.setAttribute('data-x', x);
+                        labelMinutes.style.fontSize = getFontSize();
+                        svg.appendChild(labelMinutes);
+                    }
                 }
             }
         }
     }
 
+
+
+
+
     // Hilfsfunktion zur Formatierung der Zeit
-    function formatTime(minutes) {
+    function formatTime(minutes, tickType) {
+        // if (tickType.interval === 5) {
+        //     return minutes % 60; // Nur Minuten anzeigen
+        // }
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
-        return `${hours}:${mins.toString().padStart(2, '0')}`;
+        return `${hours}:${mins.toString().padStart(2, '0')}`; // Standardformat hh:mm
     }
+
+    function formatMinutes(minutes, tickType) {
+        if (tickType.interval === 5) {
+            return minutes % 60; // Nur Minuten anzeigen
+        }
+    }
+
 
     // In der updateViewBox Funktion:
     function updateViewBox(mouseX) {

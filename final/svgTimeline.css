@@ -13,6 +13,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 svg {
     width: 80%;
@@ -72,6 +73,15 @@ svg:active {
 }
 
 .tick-label {
+    text-anchor: middle;
+    font-weight: lighter;
+    stroke: none;
+    fill: black;
+    user-select: none;
+}
+
+
+.tick-label-above {
     text-anchor: middle;
     font-weight: lighter;
     stroke: none;
