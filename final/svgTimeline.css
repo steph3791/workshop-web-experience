@@ -18,7 +18,7 @@ html, body {
 svg {
     width: 90%;
     margin: 0;
-    filter: drop-shadow(0px 0px 1em cyan);
+    filter: drop-shadow(0px 0px 1em yellow);
     display: block;
     justify-content: flex-end;
     stroke-linecap: round;
@@ -39,7 +39,7 @@ svg:active {
 }
 
 .timeline-vertical-line-hour {
-    stroke-width: 1.5px;
+    stroke-width: 1.2px;
     stroke-opacity: 1;
     stroke: black;
 }
@@ -70,6 +70,8 @@ svg:active {
 
 .tick {
     transition: opacity 0.3s ease; /* Sanfte Übergänge für Ticks */
+    stroke: black;
+    z-index: 1000;
 }
 
 .tick-label {
@@ -79,8 +81,8 @@ svg:active {
     fill: black;
     user-select: none;
     /*dominant-baseline: central; !* Verhindert vertikales Springen bei verschiedenen Schriftgrößen *!*/
+    z-index: 1000;
 }
-
 
 .tick-label-above {
     text-anchor: middle;
@@ -88,4 +90,9 @@ svg:active {
     stroke: none;
     fill: black;
     user-select: none;
+}
+
+#markings-layer rect {
+    stroke: none;
+    opacity: 0.1;
 }

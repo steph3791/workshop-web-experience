@@ -145,6 +145,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 addTicksForTickType(tickType, tickType === currentLabelTickType);
             }
         });
+        // Bereich von 0:00 bis 8:00(rot für weniger bevorzugte Zeiten)
+        highlightTicksAndLabels(0, 480, 'red');
+        // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
+        highlightTicksAndLabels(480, 720, 'green');
+        //12:00 - 13:00
+        highlightTicksAndLabels(720, 780, 'red');
+        //13:00 bis 17:00
+        highlightTicksAndLabels(780, 1020, 'green');
+        // 17:00 bis 24:00
+        highlightTicksAndLabels(1020, 1440, 'red');
     }
 
 
@@ -239,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const mouseXInViewBox = viewBox.x + (mouseXRelativeToSvg / svgRect.width) * viewBox.width;
 
-        const newWidth = 1440 / zoomLevel;
+        const newWidth = 1440 / zoomLevel + padding;
 
         viewBox.x = mouseXInViewBox - ((mouseXInViewBox - viewBox.x) * (newWidth / viewBox.width));
 
@@ -352,9 +362,55 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault()
     })
 
+    function addMarking(startMinute, endMinute, color) {
+        const markingsLayer = document.getElementById('markings-layer');
+
+        // Rechteck für die Markierung erstellen
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', startMinute); // Startposition in Minuten
+        rect.setAttribute('y', 20); // Position leicht über der Zeitlinie
+        rect.setAttribute('width', endMinute - startMinute); // Breite entspricht der Dauer
+        rect.setAttribute('height', 60); // Höhe des Rechtecks
+        rect.setAttribute('fill', color); // Farbe der Markierung
+
+        markingsLayer.appendChild(rect);
+    }
+
+    function highlightTicksAndLabels(startMinute, endMinute, color) {
+        // Alle Ticks im SVG auswählen
+        const ticks = document.querySelectorAll('.tick');
+        const labels = document.querySelectorAll('.tick-label, .tick-label-above');
+
+        ticks.forEach(tick => {
+            const tickX = parseInt(tick.getAttribute('x1')); // Die X-Position des Ticks
+            if (tickX >= startMinute && tickX <= endMinute) {
+                tick.style.stroke = color;
+            }
+        });
+
+        labels.forEach(label => {
+            const labelX = parseInt(label.getAttribute('x')); // Die X-Position des Labels
+            if (labelX >= startMinute && labelX <= endMinute) {
+                label.style.fill = color;
+            }
+        });
+    }
+
     // Initiales Zeichnen der Tick-Markierungen
     updateTicks();
-    renderParticles()
-    console.log("Finished loading svgTimeline")
+    renderParticles();
+
+    // Bereich von 0:00 bis 8:00(rot für weniger bevorzugte Zeiten)
+    addMarking(0, 480, 'red');
+    // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
+    addMarking(480, 720, 'green');
+    //12:00 - 13:00
+    addMarking(720, 780, 'red');
+    //13:00 bis 17:00
+    addMarking(780, 1020, 'green');
+    // 17:00 bis 24:00
+    addMarking(1020, 1440, 'red');
+
+
 });
 
