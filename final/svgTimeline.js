@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const timelineLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     timelineLine.setAttribute('x1', '0');
     timelineLine.setAttribute('y1', '50'); // Mittig auf der Y-Achse
-    timelineLine.setAttribute('x2', '1600');
+    timelineLine.setAttribute('x2', '1440');
     timelineLine.setAttribute('y2', '50');
     timelineLine.setAttribute('stroke', 'black');
     timelineLine.setAttribute('stroke-width', '2');
@@ -239,16 +239,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const mouseXInViewBox = viewBox.x + (mouseXRelativeToSvg / svgRect.width) * viewBox.width;
 
-        const newWidth = 1440 / zoomLevel + padding; // Padding berücksichtigen
+        const newWidth = 1440 / zoomLevel;
 
         viewBox.x = mouseXInViewBox - ((mouseXInViewBox - viewBox.x) * (newWidth / viewBox.width));
 
         // Begrenzungen sicherstellen
-        if (viewBox.x < -padding) {
-            viewBox.x = -padding;
+        if (viewBox.x < 0) {
+            viewBox.x = 0;
         }
-        if (viewBox.x + newWidth > 1440 + padding) {
-            viewBox.x = 1440 + padding - newWidth;
+        if (viewBox.x + newWidth > 1440) {
+            viewBox.x = 1440 - newWidth;
         }
 
         viewBox.width = newWidth;

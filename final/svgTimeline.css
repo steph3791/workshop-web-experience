@@ -16,8 +16,8 @@ html, body {
     overflow: hidden;
 }
 svg {
-    width: 80%;
-    margin: 0 auto;
+    width: 90%;
+    margin: 0;
     filter: drop-shadow(0px 0px 1em cyan);
     display: block;
     justify-content: flex-end;
@@ -39,7 +39,7 @@ svg:active {
 }
 
 .timeline-vertical-line-hour {
-    stroke-width: 1px;
+    stroke-width: 1.5px;
     stroke-opacity: 1;
     stroke: black;
 }
@@ -51,7 +51,7 @@ svg:active {
 }
 
 .timeline-vertical-line-quarterHour {
-    stroke-width: 1px;
+    stroke-width: 0.8px;
     stroke-opacity: 1;
     stroke: black;
 }
