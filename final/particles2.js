@@ -3,20 +3,20 @@ export class Particle {
      * Creates a new particle
      * @param svg : SVGElement
      */
-    constructor(svg) {
+    constructor(svg, areaRadius, clickPosX, clickPosY) {
         this.svgParent = svg;
         const [minX, minY, width, height] = svg.getAttribute('viewBox').split(' ').map(Number);
         this.rangeWidth = width;
         this.rangeHeight = height;
         console.log("RangeWidth: " + this.rangeWidth);
-        this.createNew(false);
+        this.createNew(false, areaRadius, clickPosX, clickPosY);
     }
 
-    createNew(isRespawn, size = 10) {
+    createNew(isRespawn, areaRadius, clickPosX, clickPosY, size = 10) {
         const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
-        this.x = Math.random() * this.rangeWidth;
-        this.y = Math.random() * this.rangeHeight;
-        this.size = Math.max(1, Math.random() * width/150 + 1);
+        this.x = clickPosX || Math.random() * this.rangeWidth;
+        this.y = clickPosY || Math.random() * this.rangeHeight;
+        this.size = Math.max(1, Math.random() * width / 150 + 1);
         this.speedX = this.initSpeed();
         this.speedY = this.initSpeed();
         this.pullForce = 1;
@@ -27,11 +27,13 @@ export class Particle {
         this.targetY = 0;
 
         if (!isRespawn) {
+            console.debug("Creating new SVg Element")
             this.element = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         }
         this.element.setAttribute("r", this.size / 2);
         this.element.setAttribute("fill", "white");
         if (!isRespawn) {
+            console.log("Adding element to svg")
             this.svgParent.appendChild(this.element);
         }
         this.updatePosition();
@@ -58,7 +60,7 @@ export class Particle {
      */
     update() {
         if (this.isSimulated) {
-            if (this.lifetime > 0) {
+            // if (this.lifetime > 0) {
                 this.x += this.speedX;
                 this.y += this.speedY;
 
@@ -69,14 +71,6 @@ export class Particle {
                     const dx = this.targetX - this.x;
                     const dy = this.targetY - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 10) {
-                        this.updateSize()
-                        // this.size = Math.min(15, this.size + 1);
-                        // this.element.setAttribute("r", this.size / 2);
-                    }
-                    if (dist < 5) {
-                        this.freeze()
-                    }
 
                     const directionX = dx / dist;
                     const directionY = dy / dist;
@@ -87,27 +81,14 @@ export class Particle {
                     this.speedY += directionY * force * this.pullForce;
                 }
 
-                // Screen wrapping for particles
-                if (this.x > this.rangeWidth) this.x = 0;
-                if (this.x < 0) this.x = this.rangeWidth;
-                if (this.y > this.rangeHeight) this.y = 0;
-                if (this.y < 0) this.y = this.rangeHeight;
-
                 this.lifetime--;
                 this.updatePosition();
-            } else {
-                this.createNew(true);
-            }
-        }
-    }
 
-    freeze() {
-        this.setIsSimulated(false)
-        // placedParticles.push(this);
-        // let index = particles.indexOf(this);
-        // particles.splice(index, 1);
-        // this.svgParent.removeChild(this.element);
-        // particles.push(new Particle(this.svgParent))
+            } else {
+                console.log("Lifetime ended at: ");
+                console.log(this.element);
+            }
+        // }
     }
 
     /**
@@ -139,12 +120,11 @@ export class Particle {
 
     updateViewBox() {
         this.updateSize(1)
-        console.log("new particle size: " +this.size);
     }
 
     updateSize(min = 5) {
         const [minX, minY, width, height] = this.svgParent.getAttribute('viewBox').split(' ').map(Number);
-        this.size = Math.max(min, Math.random() * width/150 + 1);
+        this.size = Math.max(min, Math.random() * width / 150 + 1);
         this.element.setAttribute("r", this.size / 2);
     }
 }
@@ -154,24 +134,31 @@ export class ParticleSystem {
         this.svgParent = svg;
         this.particles = [];
         this.placedParticles = [];
-        this.particleCount = 500;
+    }
 
-        for (let i = 0; i < this.particleCount; i++) {
-            this.particles.push(new Particle(this.svgParent));
+    addParticles( clickPosX, clickPosY,n = 5, areaRadius = 10) {
+        for (let i = 0; i < n; i++) {
+            const theta = Math.random() * 2 * Math.PI;
+            const distance = Math.random() * areaRadius;
+            const x = clickPosX + distance * Math.cos(theta);
+            const y = clickPosY + distance * Math.sin(theta);
+
+            const svgPoint = this.svgParent.createSVGPoint();
+            svgPoint.x = x;
+            svgPoint.y = y;
+
+            const ctm = this.svgParent.getScreenCTM();
+            // Transform the screen coordinates to SVG coordinates using the CTM
+            const svgCoords = svgPoint.matrixTransform(ctm.inverse());
+            console.log(`Starting at ${svgCoords.x} and ${svgCoords.y}`)
+            this.particles.push(new Particle(this.svgParent, areaRadius, svgCoords.x, svgCoords.y))
         }
     }
 
     animate() {
-        this.particles.forEach(particle => {
-            particle.update();
-            particle.setIsSimulated(true)
-        });
-
         this.placedParticles.forEach(p => {
-            if (this.svgParent.contains(p.getElement())) this.svgParent.removeChild(p.getElement());
+            p.update();
         })
-        this.placedParticles.splice(0, this.placedParticles.length - 1);
-        console.log("PlacedParticles: " + this.placedParticles.length + " Particles: " + this.particles.length + " Children: " + this.svgParent.children.length)
     }
 
     async udateViewBox() {
@@ -186,9 +173,12 @@ export class ParticleSystem {
     }
 
     goToTarget(clientX, clientY) {
+        console.log("GoToTarget: " + clientX + " " + clientY)
         this.particles.forEach(particle => {
             particle.setTarget(clientX, clientY);
+            this.placedParticles.push(particle);
         });
+        this.particles = []
     }
 }
 

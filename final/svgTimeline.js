@@ -319,6 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.button === 0) {
             console.debug("left button click")
             isMouseDown = true;
+            particleSystem.addParticles( e.clientX, e.clientY);
             addParticleTarget(e.clientX);
         }
     });
@@ -344,7 +345,10 @@ document.addEventListener("DOMContentLoaded", function () {
             updateTicks();
         }
         if (isMouseDown) {
-            addParticleTarget(e.clientX);
+            if (e.clientX % 1.5 == 0) {
+                particleSystem.addParticles(e.clientX, e.clientY);
+                addParticleTarget(e.clientX);
+            }
         }
 
     });
