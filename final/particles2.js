@@ -134,24 +134,26 @@ export class ParticleSystem {
         this.svgParent = svg;
         this.particles = [];
         this.placedParticles = [];
+        this.startTimeline = 0;
+        this.endTimeline = 0;
     }
 
-    addParticles( clickPosX, clickPosY,n = 5, areaRadius = 10) {
+    setStartPoint(x) {
+        this.startTimeline =x;
+    }
+
+    setEndPoint() {
+        this.endTimeline = y;
+    }
+
+    addParticles( clickPosX, clickPosY,n = 5, areaRadius = 20) {
         for (let i = 0; i < n; i++) {
             const theta = Math.random() * 2 * Math.PI;
             const distance = Math.random() * areaRadius;
             const x = clickPosX + distance * Math.cos(theta);
             const y = clickPosY + distance * Math.sin(theta);
 
-            const svgPoint = this.svgParent.createSVGPoint();
-            svgPoint.x = x;
-            svgPoint.y = y;
-
-            const ctm = this.svgParent.getScreenCTM();
-            // Transform the screen coordinates to SVG coordinates using the CTM
-            const svgCoords = svgPoint.matrixTransform(ctm.inverse());
-            console.log(`Starting at ${svgCoords.x} and ${svgCoords.y}`)
-            this.particles.push(new Particle(this.svgParent, areaRadius, svgCoords.x, svgCoords.y))
+            this.particles.push(new Particle(this.svgParent, areaRadius, x, y))
         }
     }
 
@@ -182,3 +184,11 @@ export class ParticleSystem {
     }
 }
 
+export function transformToSvgCoords(svg, clientX, clientY) {
+    const svgPoint = svg.createSVGPoint();
+    svgPoint.x = clientX;
+    svgPoint.y = clientY;
+
+    const ctm = svg.getScreenCTM();
+    return svgPoint.matrixTransform(ctm.inverse());
+}

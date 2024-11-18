@@ -1,4 +1,4 @@
-import {ParticleSystem} from "./particles2.js";
+import {ParticleSystem, transformToSvgCoords} from "./particles2.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const svg = document.getElementById('timeline');
@@ -273,13 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function addParticleTarget(clientX) {
-        const svgPoint = svg.createSVGPoint();
-        svgPoint.x = clientX;
-
-        const ctm = svg.getScreenCTM();
-
-        // Transform the screen coordinates to SVG coordinates using the CTM
-        const svgCoords = svgPoint.matrixTransform(ctm.inverse());
+        const svgCoords = transformToSvgCoords(svg, clientX, timelineLine.getAttribute('y1'))
         particleSystem.goToTarget(svgCoords.x, timelineLine.getAttribute('y1'));
     }
 
@@ -318,8 +312,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (e.button === 0) {
             console.debug("left button click")
+            const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY)
+            particleSystem.setStartPoint()
             isMouseDown = true;
-            particleSystem.addParticles( e.clientX, e.clientY);
+            particleSystem.addParticles(svgCoords.x, svgCoords.y);
             addParticleTarget(e.clientX);
         }
     });
@@ -346,7 +342,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (isMouseDown) {
             if (e.clientX % 1.5 == 0) {
-                particleSystem.addParticles(e.clientX, e.clientY);
+                const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY)
+                particleSystem.addParticles(svgCoords.x, svgCoords.y);
                 addParticleTarget(e.clientX);
             }
         }
