@@ -71,6 +71,9 @@ export class Particle {
                     const dx = this.targetX - this.x;
                     const dy = this.targetY - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist <= 0.2){
+                        this.isSimulated = false;
+                    }
 
                     const directionX = dx / dist;
                     const directionY = dy / dist;
@@ -136,17 +139,20 @@ export class ParticleSystem {
         this.placedParticles = [];
         this.startTimeline = 0;
         this.endTimeline = 0;
+        this.timeline = null;
     }
 
     setStartPoint(x) {
         this.startTimeline =x;
+        console.log("StartTimeline: " + this.startTimeline)
     }
 
-    setEndPoint() {
-        this.endTimeline = y;
+    setEndPoint(x) {
+        this.endTimeline = x;
+        console.log("EndTimeline: " + this.endTimeline)
     }
 
-    addParticles( clickPosX, clickPosY,n = 5, areaRadius = 20) {
+    addParticles( clickPosX, clickPosY,n = 2, areaRadius = 50) {
         for (let i = 0; i < n; i++) {
             const theta = Math.random() * 2 * Math.PI;
             const distance = Math.random() * areaRadius;
@@ -158,9 +164,42 @@ export class ParticleSystem {
     }
 
     animate() {
-        this.placedParticles.forEach(p => {
+        let placedCopy = this.placedParticles;
+        placedCopy.forEach(p => {
             p.update();
+            if (!p.isSimulated) {
+                let index = this.placedParticles.indexOf(p);
+                this.placedParticles.splice(index, 1);
+                this.svgParent.removeChild(p.element)
+                this.growTimeline()
+            }
         })
+    }
+
+    growTimeline() {
+        if (this.timeline == null) {
+            this.timeline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            this.timeline.setAttribute('x1', this.startTimeline);
+            this.timeline.setAttribute('x2', this.startTimeline);
+            this.timeline.setAttribute('y1', '50'); // Mittig auf der Y-Achse
+            this.timeline.setAttribute('y2', '50');
+            this.timeline.setAttribute('stroke-width', '10');
+
+
+            this.svgParent.appendChild(this.timeline)
+        }
+        // const x2 = Number(this.timeline.getAttribute('x2')) + 0.2;
+        // console.log("X: " + x2);
+        // this.timeline.setAttribute('y1', '50'); // Mittig auf der Y-Achse
+        // this.timeline.setAttribute('x2', `${x2}`);
+        // this.timeline.setAttribute('y2', '50');
+        // this.timeline.setAttribute('stroke', 'black');
+        // this.timeline.setAttribute('stroke-width', '6');
+        // this.timeline.setAttribute('id', 'timelineLine');
+    }
+
+    finishTimeline() {
+        this.timeline.setAttribute('x2', this.endTimeline)
     }
 
     async udateViewBox() {

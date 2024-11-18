@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.button === 0) {
             console.debug("left button click")
             const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY)
-            particleSystem.setStartPoint()
+            particleSystem.setStartPoint(svgCoords.x)
             isMouseDown = true;
             particleSystem.addParticles(svgCoords.x, svgCoords.y);
             addParticleTarget(e.clientX);
@@ -350,9 +350,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    svg.addEventListener('mouseup', function () {
+    svg.addEventListener('mouseup', function (e) {
         isPanning = false;
         isMouseDown = false;
+        const svgCords = transformToSvgCoords(svg, e.clientX, e.clientY);
+        particleSystem.setEndPoint(svgCords.x);
+        particleSystem.finishTimeline();
     });
 
     svg.addEventListener('mouseleave', function () {
