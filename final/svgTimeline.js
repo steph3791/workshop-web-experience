@@ -312,8 +312,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (e.button === 0) {
             console.debug("left button click")
-            const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY)
-            particleSystem.setStartPoint(svgCoords.x)
+            const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY);
+            particleSystem.setStartPoint(svgCoords.x);
+            particleSystem.setEndPoint(svgCoords.x);
             isMouseDown = true;
             particleSystem.addParticles(svgCoords.x, svgCoords.y);
             addParticleTarget(e.clientX);
@@ -342,7 +343,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (isMouseDown) {
             if (e.clientX % 1.5 == 0) {
-                const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY)
+                const svgCoords = transformToSvgCoords(svg, e.clientX, e.clientY);
+                particleSystem.setEndPoint(svgCoords.x);
                 particleSystem.addParticles(svgCoords.x, svgCoords.y);
                 addParticleTarget(e.clientX);
             }

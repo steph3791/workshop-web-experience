@@ -164,13 +164,13 @@ export class ParticleSystem {
     }
 
     animate() {
-        let placedCopy = this.placedParticles;
+        const placedCopy = this.placedParticles;
         placedCopy.forEach(p => {
             p.update();
             if (!p.isSimulated) {
-                let index = this.placedParticles.indexOf(p);
+                const index = this.placedParticles.indexOf(p);
                 this.placedParticles.splice(index, 1);
-                this.svgParent.removeChild(p.element)
+                this.svgParent.removeChild(p.element);
                 this.growTimeline()
             }
         })
@@ -179,23 +179,14 @@ export class ParticleSystem {
     growTimeline() {
         if (this.timeline == null) {
             this.timeline = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            this.timeline.setAttribute('x1', this.startTimeline);
-            this.timeline.setAttribute('x2', this.startTimeline);
-            this.timeline.setAttribute('y1', '50'); // Mittig auf der Y-Achse
-            this.timeline.setAttribute('y2', '50');
-            this.timeline.setAttribute('stroke-width', '10');
-
-
             this.svgParent.appendChild(this.timeline)
         }
-        // const x2 = Number(this.timeline.getAttribute('x2')) + 0.2;
-        // console.log("X: " + x2);
-        // this.timeline.setAttribute('y1', '50'); // Mittig auf der Y-Achse
-        // this.timeline.setAttribute('x2', `${x2}`);
-        // this.timeline.setAttribute('y2', '50');
-        // this.timeline.setAttribute('stroke', 'black');
-        // this.timeline.setAttribute('stroke-width', '6');
-        // this.timeline.setAttribute('id', 'timelineLine');
+        this.timeline.setAttribute('x1', this.startTimeline);
+        this.timeline.setAttribute('x2', this.endTimeline || this.startTimeline);
+
+        this.timeline.setAttribute('y1', '50'); // Mittig auf der Y-Achse
+        this.timeline.setAttribute('y2', '50');
+        this.timeline.setAttribute('stroke-width', '10');
     }
 
     finishTimeline() {
