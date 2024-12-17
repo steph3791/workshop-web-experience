@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     timelineLine.setAttribute('y1', '50'); // Mittig auf der Y-Achse
     timelineLine.setAttribute('x2', '1440');
     timelineLine.setAttribute('y2', '50');
-    timelineLine.setAttribute('stroke', 'black');
-    timelineLine.setAttribute('stroke-width', '2');
+    timelineLine.setAttribute('stroke', '#6a6d8c');
+    timelineLine.setAttribute('stroke-width', '80');
     timelineLine.setAttribute('id', 'timelineLine');
 
     svg.appendChild(timelineLine);
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             length: 20,   // Länge der Tick-Markierung
             minZoomLevel: 1,
             showLabel: true,
-            labelOffset: 25, // Abstand des Labels unterhalb des Tick-Strichs
+            labelOffset: 30, // Abstand des Labels unterhalb des Tick-Strichs
             fontSize: 15,    // Schriftgröße in Pixeln
             radius: 10,
             color: '#03008C',
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labelOffset: 20,
             fontSize: 14,    // Schriftgröße in Pixeln
             radius: 7,
-            color: '#4A90E2',
+            color: '#1E19FF',
         },
         {
             interval: 15, // Viertelstunden-Ticks
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labelOffset: 15,
             fontSize: 12,    // Schriftgröße in Pixeln
             radius: 5,
-            color: '#A5C9F9',
+            color: '#7977E5',
         },
         {
             interval: 5, // 5-Minuten-Ticks
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labelOffset: 13, // Kürzerer Abstand für 5-Minuten-Ticks
             fontSize: 8,    // Schriftgröße in Pixeln
             radius: 2,
-            color: '#d3e2f6',
+            color: '#B5B4F0',
         },
         {
             interval: 1, // 1-Minuten-Ticks
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labelOffset: 2,
             fontSize: 8,    // Schriftgröße in Pixeln
             radius: 0.5,
-            color: '#e5effc',
+            color: '#D4D3F3',
         },
     ];
 
@@ -154,15 +154,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         // Bereich von 0:00 bis 8:00(rot für weniger bevorzugte Zeiten)
-        highlightTicksAndLabels(0, 480, 'red');
-        // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
-        highlightTicksAndLabels(480, 720, 'green');
-        //12:00 - 13:00
-        highlightTicksAndLabels(720, 780, 'red');
-        //13:00 bis 17:00
-        highlightTicksAndLabels(780, 1020, 'green');
-        // 17:00 bis 24:00
-        highlightTicksAndLabels(1020, 1440, 'red');
+        // highlightTicksAndLabels(0, 480, 'red');
+        // // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
+        // highlightTicksAndLabels(480, 720, 'black');
+        // //12:00 - 13:00
+        // highlightTicksAndLabels(720, 780, 'red');
+        // //13:00 bis 17:00
+        // highlightTicksAndLabels(780, 1020, 'black');
+        // // 17:00 bis 24:00
+        // highlightTicksAndLabels(1020, 1440, 'red');
     }
 
 
@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (minutes !== 0 && minutes % 15 !== 0) {
                     const labelMinutes = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     labelMinutes.setAttribute('x', x);
-                    labelMinutes.setAttribute('y', centerY + 0.5); // Oberhalb des Kreises
+                    labelMinutes.setAttribute('y', centerY + 0.3); // Oberhalb des Kreises
                     labelMinutes.textContent = formatMinutes(x, tickType);
                     labelMinutes.setAttribute('class', 'tick-label-above');
                     labelMinutes.setAttribute('data-x', x);
@@ -391,25 +391,25 @@ document.addEventListener("DOMContentLoaded", function () {
     //     markingsLayer.appendChild(rect);
     // }
 
-    function highlightTicksAndLabels(startMinute, endMinute, color) {
-        // Alle Ticks im SVG auswählen
-        const ticks = document.querySelectorAll('.tick');
-        const labels = document.querySelectorAll('.tick-label, .tick-label-above');
-
-        ticks.forEach(tick => {
-            const tickX = parseInt(tick.getAttribute('x1')); // Die X-Position des Ticks
-            if (tickX >= startMinute && tickX <= endMinute) {
-                tick.style.stroke = color;
-            }
-        });
-
-        labels.forEach(label => {
-            const labelX = parseInt(label.getAttribute('x')); // Die X-Position des Labels
-            if (labelX >= startMinute && labelX <= endMinute) {
-                label.style.fill = color;
-            }
-        });
-    }
+    // function highlightTicksAndLabels(startMinute, endMinute, color) {
+    //     // Alle Ticks im SVG auswählen
+    //     const ticks = document.querySelectorAll('.tick');
+    //     const labels = document.querySelectorAll('.tick-label, .tick-label-above');
+    //
+    //     ticks.forEach(tick => {
+    //         const tickX = parseInt(tick.getAttribute('x1')); // Die X-Position des Ticks
+    //         if (tickX >= startMinute && tickX <= endMinute) {
+    //             tick.style.stroke = color;
+    //         }
+    //     });
+    //
+    //     labels.forEach(label => {
+    //         const labelX = parseInt(label.getAttribute('x')); // Die X-Position des Labels
+    //         if (labelX >= startMinute && labelX <= endMinute) {
+    //             label.style.fill = color;
+    //         }
+    //     });
+    // }
 
     // Initiales Zeichnen der Tick-Markierungen
     updateTicks();

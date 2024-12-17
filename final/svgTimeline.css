@@ -18,7 +18,7 @@ html, body {
 svg {
     width: 90%;
     margin: 0;
-    /*filter: drop-shadow(0px 0px 1em yellow);*/
+    filter: drop-shadow(0px 0px 1em #6a6d8c);
     display: block;
     justify-content: flex-end;
     stroke-linecap: round;
@@ -30,42 +30,34 @@ svg:active {
 }
 
 #timeline {
-    stroke: black;
+    stroke: #3f4261;
 }
 
 .timeline-horizontal-line {
     stroke-width: 5px;
-    stroke: black;
+    stroke: #5d638b;
 }
 
 .timeline-vertical-line-hour {
-    /*stroke-width: 1.2px;*/
     stroke-opacity: 0;
-    /*stroke: black;*/
 }
 
 .timeline-vertical-line-halfHour {
-    stroke-width: 1px;
     stroke-opacity: 0;
-    /*stroke: black;*/
 }
 
 .timeline-vertical-line-quarterHour {
-    stroke-width: 0.8px;
     stroke-opacity: 0;
-    stroke: black;
+
 }
 
 .timeline-vertical-line-fiveMinutes {
-    stroke-width:   0.5px;
     stroke-opacity: 0;
-    stroke: black;
 }
 
 .timeline-vertical-line-oneMinute {
-    stroke-width:   0.5px;
     stroke-opacity: 0;
-    stroke: grey;
+    opacity: 40%;
 }
 
 .tick {
@@ -78,7 +70,7 @@ svg:active {
     text-anchor: middle;
     font-weight: lighter;
     stroke: none;
-    fill: black;
+    fill: white;
     user-select: none;
     /*dominant-baseline: central; !* Verhindert vertikales Springen bei verschiedenen Schriftgrößen *!*/
     z-index: 1000;
@@ -88,8 +80,9 @@ svg:active {
     text-anchor: middle;
     font-weight: lighter;
     stroke: none;
-    fill: black;
+    fill: white;
     user-select: none;
+    z-index: 2000;
 }
 
 #markings-layer rect {
