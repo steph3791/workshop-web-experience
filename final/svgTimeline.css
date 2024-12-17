@@ -18,7 +18,7 @@ html, body {
 svg {
     width: 90%;
     margin: 0;
-    filter: drop-shadow(0px 0px 1em yellow);
+    /*filter: drop-shadow(0px 0px 1em yellow);*/
     display: block;
     justify-content: flex-end;
     stroke-linecap: round;
@@ -39,38 +39,38 @@ svg:active {
 }
 
 .timeline-vertical-line-hour {
-    stroke-width: 1.2px;
-    stroke-opacity: 1;
-    stroke: black;
+    /*stroke-width: 1.2px;*/
+    stroke-opacity: 0;
+    /*stroke: black;*/
 }
 
 .timeline-vertical-line-halfHour {
     stroke-width: 1px;
-    stroke-opacity: 1;
-    stroke: black;
+    stroke-opacity: 0;
+    /*stroke: black;*/
 }
 
 .timeline-vertical-line-quarterHour {
     stroke-width: 0.8px;
-    stroke-opacity: 1;
+    stroke-opacity: 0;
     stroke: black;
 }
 
 .timeline-vertical-line-fiveMinutes {
     stroke-width:   0.5px;
-    stroke-opacity: 1;
+    stroke-opacity: 0;
     stroke: black;
 }
 
 .timeline-vertical-line-oneMinute {
     stroke-width:   0.5px;
-    stroke-opacity: 0.5;
+    stroke-opacity: 0;
     stroke: grey;
 }
 
 .tick {
     transition: opacity 0.3s ease; /* Sanfte Übergänge für Ticks */
-    stroke: black;
+    /*stroke: black;*/
     z-index: 1000;
 }
 

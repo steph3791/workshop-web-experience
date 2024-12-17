@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showLabel: true,
             labelOffset: 15, // Abstand des Labels unterhalb des Tick-Strichs
             fontSize: 15,    // Schriftgröße in Pixeln
+            radius: 10,
+            color: '#03008C',
         },
         {
             interval: 30, // Halbstunden-Ticks
@@ -57,6 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showLabel: true,
             labelOffset: 15,
             fontSize: 14,    // Schriftgröße in Pixeln
+            radius: 7,
+            color: '#4A90E2',
         },
         {
             interval: 15, // Viertelstunden-Ticks
@@ -66,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showLabel: true,
             labelOffset: 13,
             fontSize: 12,    // Schriftgröße in Pixeln
+            radius: 5,
+            color: '#A5C9F9',
         },
         {
             interval: 5, // 5-Minuten-Ticks
@@ -75,6 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showLabel: true,
             labelOffset: 10, // Kürzerer Abstand für 5-Minuten-Ticks
             fontSize: 8,    // Schriftgröße in Pixeln
+            radius: 2,
+            color: '#d3e2f6',
         },
         {
             interval: 1, // 1-Minuten-Ticks
@@ -84,6 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showLabel: false,
             labelOffset: 2,
             fontSize: 8,    // Schriftgröße in Pixeln
+            radius: 0.5,
+            color: '#e5effc',
         },
     ];
 
@@ -169,20 +179,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         for (let i = firstTick; i <= endMinute; i += tickType.interval) {
             const x = i;
-            const y1 = 50 - tickType.length / 2;
-            const y2 = 50 + tickType.length / 2;
+            const y1 = 60 - tickType.length / 2;
+            const y2 = 60 + tickType.length / 2;
+            // const yCenter = timelineLine.getAttribute('y1');
 
             // Prüfen, ob der Tick bereits existiert
             let tick = svg.querySelector(`.tick.${tickType.className}[data-x="${x}"]`);
             if (!tick) {
-                tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                tick.setAttribute('x1', x);
-                tick.setAttribute('y1', y1);
-                tick.setAttribute('x2', x);
-                tick.setAttribute('y2', y2);
+                tick = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                tick.setAttribute('cx', x);
+                tick.setAttribute('cy', y1);
+                tick.setAttribute('r', tickType.radius);
+                tick.setAttribute('fill', tickType.color);
+                tick.setAttribute('filter', 'url(#boxShadow)');
+                // tick.setAttribute('x2', x);
+                // tick.setAttribute('y2', y2);
                 tick.setAttribute('class', `tick ${tickType.className}`);
                 tick.setAttribute('data-x', x); // Attribut zur Identifikation
                 svg.appendChild(tick);
+                // <circle cx="100" cy="100" r="50" stroke="black" stroke-width="3" fill="yellow"/>
+                // svg.innerHTML = <circle cx="100" cy="100" r="50" stroke="black" stroke-width="3" fill="yellow"/>;
+
+
             }
 
             // Beschriftungen hinzufügen
@@ -366,19 +384,19 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault()
     })
 
-    function addMarking(startMinute, endMinute, color) {
-        const markingsLayer = document.getElementById('markings-layer');
-
-        // Rechteck für die Markierung erstellen
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', startMinute); // Startposition in Minuten
-        rect.setAttribute('y', 20); // Position leicht über der Zeitlinie
-        rect.setAttribute('width', endMinute - startMinute); // Breite entspricht der Dauer
-        rect.setAttribute('height', 60); // Höhe des Rechtecks
-        rect.setAttribute('fill', color); // Farbe der Markierung
-
-        markingsLayer.appendChild(rect);
-    }
+    // function addMarking(startMinute, endMinute, color) {
+    //     const markingsLayer = document.getElementById('markings-layer');
+    //
+    //     // Rechteck für die Markierung erstellen
+    //     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    //     rect.setAttribute('x', startMinute); // Startposition in Minuten
+    //     rect.setAttribute('y', 20); // Position leicht über der Zeitlinie
+    //     rect.setAttribute('width', endMinute - startMinute); // Breite entspricht der Dauer
+    //     rect.setAttribute('height', 60); // Höhe des Rechtecks
+    //     rect.setAttribute('fill', color); // Farbe der Markierung
+    //
+    //     markingsLayer.appendChild(rect);
+    // }
 
     function highlightTicksAndLabels(startMinute, endMinute, color) {
         // Alle Ticks im SVG auswählen
@@ -404,16 +422,16 @@ document.addEventListener("DOMContentLoaded", function () {
     updateTicks();
     renderParticles();
 
-    // Bereich von 0:00 bis 8:00(rot für weniger bevorzugte Zeiten)
-    addMarking(0, 480, 'red');
-    // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
-    addMarking(480, 720, 'green');
-    //12:00 - 13:00
-    addMarking(720, 780, 'red');
-    //13:00 bis 17:00
-    addMarking(780, 1020, 'green');
-    // 17:00 bis 24:00
-    addMarking(1020, 1440, 'red');
+    // // Bereich von 0:00 bis 8:00(rot für weniger bevorzugte Zeiten)
+    // addMarking(0, 480, 'red');
+    // // Bereich von 8:00 bis 12:00 (grün für Meetings oder zahlungspflichtige Parkzeiten)
+    // addMarking(480, 720, 'green');
+    // //12:00 - 13:00
+    // addMarking(720, 780, 'red');
+    // //13:00 bis 17:00
+    // addMarking(780, 1020, 'green');
+    // // 17:00 bis 24:00
+    // addMarking(1020, 1440, 'red');
 
 
 });
